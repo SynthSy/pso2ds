@@ -171,7 +171,7 @@ function gUpdate(){
         .data(calcs)
         .attr("width",parentLength)
         .attr("fill", function(d){
-            return d.settings.dmgid==current_params.settings.dmgid ? "pink" : "white";
+            return d.settings.dmgid==current_params.settings.dmgid ? "pink" : "#eee";
         });
     gdesc.selectAll(".gdesc")
         .data(calcs)
