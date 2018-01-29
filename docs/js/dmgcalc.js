@@ -170,7 +170,7 @@ var dmg_calc = new Vue({
         // 表示用サマリー(ユニット)
         summary_q : function(){
             var rings = this.summary_q_rings;
-            return ['ユニOP&リングステ＋'+(this.params.equips.unitsop),'倍率×'+rings.r.toFixed(2),' クリティカル倍率×'+rings.cr.toFixed(2)].join(' ');
+            return ['ユニOP&リングステ＋'+(this.params.equips.unitsop),'\r\n倍率×'+rings.r.toFixed(2),' クリティカル倍率×'+rings.cr.toFixed(2)].join(' ');
         },
         // リング倍率
         summary_q_rings : function(){
@@ -187,7 +187,7 @@ var dmg_calc = new Vue({
         },
         // 表示用サマリー(エネミー)
         summary_e : function(){
-            return ['防御力 '+this.params.enemy.def,'技量 '+this.params.enemy.dex,'部位倍率× '+this.params.enemy.partrate.toFixed(2),'属性倍率×'+this.params.enemy.elmrate.toFixed(2)].join(' ')
+            return ['防御力 '+this.params.enemy.def,'技量 '+this.params.enemy.dex,'\r\n部位倍率× '+this.params.enemy.partrate.toFixed(2),'属性倍率×'+this.params.enemy.elmrate.toFixed(2)].join(' ')
         },
         // 通常倍率
         all_r:function(){
