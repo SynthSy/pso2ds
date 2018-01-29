@@ -141,7 +141,7 @@ var dmg_calc = new Vue({
     computed: {
         // 表示用サマリー(設定)
         summary_s : function(){
-            return ['攻撃属性 '+['打撃','射撃','ペット','テク'][this.params.settings.atktype],'謎倍率'+this.params.settings.nazo ? 'あり': 'なし','グループ '+this.params.settings.group].join(' ') + '\r\n' +
+            return ['攻撃属性 '+['打撃','射撃','ペット','テク'][this.params.settings.atktype],'謎倍率'+(this.params.settings.nazo ? 'あり': 'なし'),'グループ '+this.params.settings.group].join(' ') + '\r\n' +
                    ["MAX "+this.dmg_cmax,'MIN '+this.dmg_min,"MEAN "+this.dmg_mean].join(" ");
         },
         // 表示用サマリー(プレイヤー)
