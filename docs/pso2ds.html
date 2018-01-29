@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>PSO2ダメージ計算機</title>
+    <link rel="stylesheet" href="css/spectre.min.css">
+    <link rel="stylesheet" href="css/spectre-exp.min.css">
+    <script src="js/version.js"></script>
+    <script src="js/vue.min.js"></script>
+    <script src="js/d3.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="wrap">
+        <div id="graphs">
+            <section class="form-horizontal">
+                <h3 class="bg-gray">GRAPHS</h3>
+                <div class="form-group">
+                    <div class="col-1">
+                        <div style="position: relative;width: 1200%;z-index: -1;">
+                            <svg class="desc"></svg>
+                        </div>
+                    </div>
+                    <svg class="col-11 chart"></svg>
+                </div>
+                <div class="form-group">
+                    <svg class="col-1" height="40"></svg>
+                    <svg class="col-11 axis"></svg>
+                </div>
+            </section>
+        </div>
+        <div id="params">
+            <section id="settings" class="form-horizontal">
+                <div class="form-group bg-gray">
+                    <h3 class="col-3">SETTINGS</h3>
+                    <h6 class="col-7" style="white-space: pre;">{{ summary_s }}</h6>
+                    <div class="col-2">
+                        <button id="version" class="btn btn-lg wh100" style="padding:0;">{{ "v"+version_r[0].ver.toFixed(2)}}</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-2" v-for="(val,index) in [{cmd:'add',name:'追加'},{cmd:'save',name:'セーブ'},{cmd:'load',name:'ロード'},{cmd:'init',name:'初期値'}]">
+                        <button :id="val.cmd" class="btn btn-lg wh100">{{ val.name }}</button>
+                    </div>
+                    <div class="col-2">
+                        <label class="form-label input-lg center">ｸﾞﾙｰﾌﾟ</label>
+                    </div>
+                    <div class="col-2">
+                        <input class="form-input input-lg left" type="text" v-model="params.settings.group">
+                    </div>
+                    <div class="col-2" v-for="(atktype,key) in ['打撃','射撃','ペット','テク']">
+                        <label class="btn btn-lg wh100" style="padding-left:0;padding-right:0;" :class="[ key==params.settings.atktype ? 'btn-primary' : '' ]">
+                            <input type="radio" :value="key" v-model="params.settings.atktype">{{ atktype }}
+                        </label>
+                    </div>
+                    <div class="col-2">
+                        <label class="form-label btn btn-lg" v-bind:class="[ params.settings.nazo ? 'btn-primary' : '' ]"><input type="checkbox" v-model="params.settings.nazo">{{ "謎倍率"+ (params.settings.nazo ? 'あり': 'なし') }}</label>
+                    </div>
+                    <div class="col-2">
+                    </div>
+                    <div class="col-2">
+                        <label class="form-label input-lg center">説明</label>
+                    </div>
+                    <div class="col-10">
+                        <input class="form-input input-lg left" type="text" v-model="params.settings.desc">
+                        <input class="form-input input-lg left" type="text" style="display:none" v-model="params.settings.calcid">
+                    </div>
+                </div>
+            </section>
+            <section id="player" class="form-horizontal">
+                <div class="form-group bg-gray">
+                    <h3 class="col-3">PLAYER</h3>
+                    <h6 class="col-9" style="white-space: pre;">{{ summary_p }}</h6>
+                </div>
+                <range-text name="素手攻撃力" :max="4000" :min="500" :step="1" v-model="params.player.atk" :statuslabel="true"></range-text>
+                <range-text name="技量" :max="1600" :min="200" :step="1" v-model="params.player.dex"></range-text>
+                <range-text name="クリティカル率" :max="100" :min="0" :step="1" v-model="params.player.critical"></range-text>
+            </section>
+            <section id="weapon" class="form-horizontal">
+                <div class="form-group bg-gray">
+                    <h3 class="col-3">WEAPON</h3>
+                    <h6 class="col-9" style="white-space: pre;">{{ summary_w }}</h6>
+                </div>
+                <range-text name="攻撃力" :max="3000" :min="500" :step="1" v-model="params.weapon.atk"></range-text>
+                <range-text name="OP(固定値)" :max="400" :min="0" :step="1" v-model="params.weapon.op" :statuslabel="true"></range-text>
+                <range-text name="属性値" :max="60" :min="0" :step="1" v-model="params.weapon.elm"></range-text>
+                <range-text v-for="(potential,index) in params.weapon.potentials" :key="index" 
+                        @addarray="params.weapon.potentials.push({critical:false,rate:0})" 
+                        @removearray="params.weapon.potentials.splice(index, 1)" :arrid="index" 
+                        :name="'潜在S級倍率 '+(index+1)" :max="60" :min="0" :step="1" :rateswitch="true" v-model="params.weapon.potentials[index].rate">
+                    <div class="col-2">
+                        <label class="label label-lg wh100 center" v-bind:class="[potential.critical ? 'label-primary' : 'label-secondary']">
+                            <input type="checkbox" v-model="potential.critical">{{potential.critical ? "C倍率" : "倍率"}}
+                        </label>
+                    </div>
+                </range-text>
+            </section>
+            <section id="equips" class="form-horizontal">
+                <div class="form-group bg-gray">
+                    <h3 class="col-3">EQUIPS</h3>
+                    <h6 class="col-9" style="white-space: pre;">{{ summary_q }}</h6>
+                </div>
+                <range-text name="ユニOP&リングステ" :max="400" :min="0" :step="1" v-model="params.equips.unitsop" :statuslabel="true"></range-text>
+                <range-text v-for="(ring,index) in params.equips.rings" :key="index" 
+                        @addarray="params.equips.rings.push({critical:false,rate:0})" 
+                        @removearray="params.equips.rings.splice(index, 1)" :arrid="index" 
+                        :name="'リング倍率 '+(index+1)" :max="60" :min="0" :step="1" :rateswitch="true" v-model="params.equips.rings[index].rate">
+                    <div class="col-2">
+                        <label class="label label-lg wh100 center" :class="[ring.critical ? 'label-primary' : 'label-secondary']">
+                            <input type="checkbox" v-model="ring.critical">{{ring.critical ? "C倍率" : "倍率"}}
+                        </label>
+                    </div>
+                </range-text>
+            </section>
+            <section id="enemy" class="form-horizontal">
+                <div class="form-group bg-gray">
+                    <h3 class="col-3">ENEMY</h3>
+                    <h6 class="col-9" style="white-space: pre;">{{ summary_e }}</h6>
+                </div>
+                <range-text name="防御力" :max="1000" :min="100" :step="1" v-model="params.enemy.def" :statuslabel="true"></range-text>
+                <range-text name="技量" :max="1000" :min="100" :step="1" v-model="params.enemy.dex"></range-text>
+                <range-text name="部位倍率" :max="5" :min="0" :step="0.1" v-model="params.enemy.partrate"></range-text>
+                <range-text name="属性倍率" :max="3" :min="0" :step="0.1" v-model="params.enemy.elmrate"></range-text>
+            </section>
+            <section id="pa" class="form-horizontal">
+                <h3>PA & SKILLS & OTHERS</h3>
+                <ul class="tab tab-block">
+                    <li class="tab-item active">
+                        <a href="#">Co</a>
+                    </li>
+                    <li class="tab-item">
+                        <a href="#">Hu</a>
+                    </li>
+                    <li class="tab-item">
+                        <a href="#">Fi</a>
+                    </li>
+                    <li class="tab-item">
+                        <a href="#">Ra</a>
+                    </li>
+                    <li class="tab-item">
+                        <a href="#">Gu</a>
+                    </li>
+                    <li class="tab-item">
+                        <a href="#">Fo</a>
+                    </li>
+                    <li class="tab-item">
+                        <a href="#">Te</a>
+                    </li>
+                    <li class="tab-item">
+                        <a href="#">Br</a>
+                    </li>
+                    <li class="tab-item">
+                        <a href="#">Bo</a>
+                    </li>
+                    <li class="tab-item">
+                        <a href="#">Su</a>
+                    </li>
+                    <li class="tab-item">
+                        <a href="#">Hr</a>
+                    </li>
+                </ul>
+                <div class="col-2">
+                    <label class="form-label btn btn-lg" :class="[ params.enemy.wb ? 'btn-primary' : '' ]">
+                        <input type="checkbox" v-model="params.enemy.wb">{{ params.enemy.wb ? 'WBあり': 'WBなし' }}
+                    </label>
+                </div>
+            </section>
+            <!-- ポップアップ -->
+            <div id="popup">
+                <button class="btn" style="display:block;margin:0 0 0 auto;" id="close">×</button>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <h4 class="col-3">このシミュについて</h4>
+                        <div class="col-9">
+                            作者:<a href="https://twitter.com/usousuke" target="_blank">@usousuke</a>
+                        </div>
+                    </div>
+                </div>
+                <p>
+                    <a href="https://twitter.com/6elz" target="_blank">@6elz</a>氏の<a href="http://4rt.info/psod/">http://4rt.info/psod/</a>を参考に作成しました。<br>
+                    改めて@6elz氏お礼申し上げます。私個人の勉強という側面が大きいのですが、公開の許可を頂けて非常に感謝しております。
+                </p>
+                <h4>コンセプト</h4>
+                <p>
+                    自分がpso2を辞めたときのためにできるだけ単純に作りました。<br>
+                    単純な倍率系が増えたくらいでは変更しなくてもいいくらいに作っています。<br>
+                </p>
+                <h4>個人的な改良点</h4>
+                <p>
+                    <strong>クリティカル時の倍率上昇系をいじれるようにしています。</strong>これをしたかったのがほとんどです。<br>
+                    倍率系の存在場所が増え、任意倍率で調整するのが厳しくなってきたので<strong>武器潜在の倍率、リング倍率を任意に増やせるように</strong>しています。
+                </p>
+                <section class="form-horizontal">
+                    <h3 class="col-12 bg-gray">VERSION</h3>
+                    <div class="form-group" v-for="v in version_r">
+                        <div class="col-2 center bg-primary">{{ "ver." + v.ver.toFixed(2)}}</div>
+                        <div class="col-4" style="padding-left:10px;white-space: pre;">{{ v.desc }}</div>
+                        <div class="col-4" style="padding-left:10px;white-space: pre;">{{ v.next }}</div>
+                        <div class="col-2 center">{{ v.date }}</div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <!-- レイヤー -->
+    <div id="layer"></div>
+    <script src="js/graphs.js"></script>
+    <script src="js/dmgcalc.js"></script>
+    <script>
+        $("#append").click(function(){
+            gAppend();
+        });
+        $("#update").click(function(){
+            gUpdate();
+        });
+        // show popupボタンクリック時の処理
+        $(document).on("click","#version",function(e) {
+            $('#popup, #layer').show();
+        });
+        // レイヤー/ポップアップのcloseボタンクリック時の処理
+        $('#close, #layer').click(function(e) {
+            $('#popup, #layer').hide();
+        });
+        $(document).on("click","#init",function(){
+            pInit();
+        });
+        $(document).on("click","#add",function(){
+            pAdd();
+        });
+        
+        var timer = false;
+        $(window).resize(function() {
+            if (timer !== false) {
+                clearTimeout(timer);
+            }
+            timer = setTimeout(function() {
+                gUpdate();
+            }, 200);
+        });
+    </script>
+</body>
+</html>
