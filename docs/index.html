@@ -218,6 +218,7 @@
     <script src="js/graphs.js"></script>
     <script src="js/dmgcalc.js"></script>
     <script>
+        var repository="https://rsskkr.github.io/pso2ds/?d=";
         $("#append").click(function(){
             gAppend();
         });
@@ -239,7 +240,7 @@
             pAdd();
         });
         $(document).on("click","#save",function(){
-            shorten("https://rsskkr.github.io/pso2ds/?d="+deflate(JSON.stringify(calcs))).then(function(response) {
+            shorten(repository+deflate(JSON.stringify(calcs))).then(function(response) {
                 // response.result.id に短縮URLが入っている
                 var shortUrl = response.result.id;
                 // 画面に表示
@@ -248,7 +249,37 @@
             });
         });
         $(document).on("click","#load",function(){
-            $("#comp").val(deflate(JSON.stringify(calcs)));
+            var shorturl=window.prompt("URLを入力してください。","")
+            if (!shorturl){
+                alert("キャンセルしました。");
+            } else {
+                expanden(shorturl).then(function(response){
+                    var longUrl = response.result.longUrl;
+                    var p=longUrl.replace(repository,"")
+                    
+                    // json文字列復元
+                    try {
+                        var j = JSON.parse(inflate(p));
+                        
+                        alert("URLからグラフをロードします。");
+                        
+                        if (current_params.graph.line==init_params.graph.line){
+                            calcs=[];
+                            d3.select('.chart').selectAll("g").remove();
+                        }
+                        
+                        for (var i=0;i<j.length;i++){
+                            $.guid++
+                            j[i].settings.dmgid=$.guid;
+                            calcs.push(j[i]);
+                        }
+                        gAppend();
+                    }
+                    catch (ex) {
+                        alert("urlが不正です。");
+                    }
+                });
+            }
         });
         
         var timer = false;
