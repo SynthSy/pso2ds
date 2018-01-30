@@ -38,6 +38,8 @@ function gAppend(){
         .enter()
         .append('rect')
         .attr('y', 15)
+        .style("stroke", color[0])
+        .style("stroke-width", 2)
         .attr('height', barHeight - 19);
 
     chart_g.append("line")
@@ -65,8 +67,7 @@ function gAppend(){
         .attr('height', barHeight)
         .attr('width', "100%")
         .on('click', function (d,i) {
-            var dmgid=d.settings.dmgid;
-            pSelect(dmgid);
+            pSelect(d.settings.dmgid);
         });
 
     

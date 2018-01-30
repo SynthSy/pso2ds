@@ -74,13 +74,20 @@ function pInit(){
 }
 
 function pSelect(dmgid){
-    if (current_params.settings.dmgid==dmgid)
+    var idx=0;
+    if (dmgid==null){
+        current_params=calcs[0];
+        dmg_calc.params=current_params;
         return 0;
-    var idx = calcs.findIndex(function(d){
-        return d.settings.dmgid==dmgid;
-    });
-    current_params=calcs[idx];
-    dmg_calc.params=current_params;
+    }
+    
+    if (current_params.settings.dmgid!==dmgid){
+        idx = calcs.findIndex(function(d){
+            return d.settings.dmgid==dmgid;
+        });
+        current_params=calcs[idx];
+        dmg_calc.params=current_params;
+    }
 }
 
 // html記述を簡略化するためにcomponentを使う

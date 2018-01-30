@@ -71,11 +71,11 @@
                         <input class="form-input input-lg left" type="text" v-model="params.settings.desc">
                         <input class="form-input input-lg left" type="text" style="display:none" v-model="params.settings.calcid">
                     </div>
-                    <div class="col-12">
-                        <input id="comp" class="form-input input-lg left" type="text">
+                    <div class="col-10 saveurl" style="display:none;">
+                        <input class="form-input input-lg left" type="text">
                     </div>
-                    <div class="col-12">
-                        <input id="decomp" class="form-input input-lg left" type="text">
+                    <div class="col-2 saveurl" style="display:none;">
+                        <button class="btn btn-lg wh100" onClick="$('.saveurl').hide();">×</button>
                     </div>
                 </div>
             </section>
@@ -240,20 +240,18 @@
             pAdd();
         });
         $(document).on("click","#save",function(){
-            $("#decomp").val(JSON.stringify(calcs));
-        });
-        $(document).on("click","#load",function(){
-            $("#comp").val(deflate($("#decomp").val()));
-        });
-        
-        $("#shorturl").click(function(){
-            shorten("https://rsskkr.github.io/pso2ds/?d="+$("#comp").val()).then(function(response) {
+            shorten("https://rsskkr.github.io/pso2ds/?d="+deflate(JSON.stringify(calcs))).then(function(response) {
                 // response.result.id に短縮URLが入っている
                 var shortUrl = response.result.id;
                 // 画面に表示
-                $("#decomp").val(shortUrl);
+                $(".saveurl>input").val(shortUrl);
+                $(".saveurl").show();
             });
         });
+        $(document).on("click","#load",function(){
+            $("#comp").val(deflate(JSON.stringify(calcs)));
+        });
+        
         var timer = false;
         $(window).resize(function() {
             if (timer !== false) {
@@ -280,6 +278,35 @@
         return val;
     }
     var v = $("[src*='jquery']").attr('integrty').slice(7,46).replace("/","_");
+    
+    $(function(){
+        // urlパラメータ解析
+        if (location.search.length>0){
+            // パラメータ取得
+            var p=location.search.substring(3);
+            // json文字列復元
+            try {
+                var j = JSON.parse(inflate(p));
+                
+                alert("URLからグラフをロードします。");
+                
+                calcs=[];
+                d3.select('.chart').selectAll("g").remove();
+                for (var i=0;i<j.length;i++){
+                    $.guid++
+                    j[i].settings.dmgid=$.guid;
+                    calcs.push(j[i]);
+                }
+                pSelect();
+                gAppend();
+            }
+            catch (ex) {
+                alert("urlが不正です。");
+            }
+        }
+    });
+
+    
     </script>
     <script src="js/urlshortner.js"></script>
 </body>
