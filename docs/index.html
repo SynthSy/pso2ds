@@ -263,7 +263,7 @@
                         
                         alert("URLからグラフをロードします。");
                         
-                        if (current_params.graph.line==init_params.graph.line){
+                        if (current_params.graph.line==init_params.graph.line && calcs.length==1){
                             calcs=[];
                             d3.select('.chart').selectAll("g").remove();
                         }
