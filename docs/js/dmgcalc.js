@@ -1,7 +1,6 @@
 var init_params = {
     settings:{
         atktype:0,
-        nazo:true,
         group:"",
         desc:"b(OxO)n",
         dmgid:0
@@ -10,7 +9,6 @@ var init_params = {
         atk:1500,
         dex:600,
         critical:5,
-        skills:[],
         breakSD:1.0
     },
     weapon:{
@@ -34,9 +32,13 @@ var init_params = {
         partrate:1.0,
         elmrate:1.0
     },
-    pa:{
-        power:100,
-        dexcollect:1.0
+    others:{
+        nazo:true,
+        any_r:0,
+        pa:[
+            {power:100,dexcollect:100}
+        ],
+        skills:[]
     },
     graph: {
         bars : [564,585],
@@ -144,11 +146,15 @@ Vue.component('range-text', {
 // またComputedで常にダメージ計算までする
 var dmg_calc = new Vue({
     el: '#params',
-    data: {params:current_params,version:v},
+    data: {
+        params:current_params,
+        skilldata:skills,
+        version:v
+    },
     computed: {
         // 表示用サマリー(設定)
         summary_s : function(){
-            return ['攻撃属性 '+['打撃','射撃','ペット','テク'][this.params.settings.atktype],'謎倍率'+(this.params.settings.nazo ? 'あり': 'なし'),'グループ '+this.params.settings.group].join(' ') + '\r\n' +
+            return ['攻撃属性 '+['打撃','射撃','ペット','テク'][this.params.settings.atktype],'グループ '+this.params.settings.group].join(' ') + '\r\n' +
                    ["MAX "+this.dmg_cmax,'MIN '+this.dmg_min,"MEAN "+this.dmg_mean].join(" ");
         },
         // 表示用サマリー(プレイヤー)
@@ -205,7 +211,7 @@ var dmg_calc = new Vue({
             
             r *= rings.r;
             r *= potentials.r;
-            r *= this.params.settings.nazo ? 1.05 : 1;
+            r *= this.params.others.nazo ? 1.05 : 1;
             
             return r;
         },
@@ -310,7 +316,32 @@ var dmg_calc = new Vue({
             return this.params.graph.line;
         },
         version_r:function(){
-            return this.version.reverse();
+            return this.version.sort(function(p,n){
+                if( p.ver > n.ver ) return -1
+                else return 1;
+            });
+        }
+    },
+    methods:{
+        classSkills:function(className){
+            return this.skilldata.filter(function(el, index, array) {
+                return (el.className == className);
+            });
+        },
+        changeClass:function(className){
+            return this.skilldata.filter(function(el, index, array) {
+                return (el.className == className);
+            });
+        },
+        hasClass:function(className){
+            return this.others.skills.some(function(el, index, array) {
+                return (el.className == className);
+            });
+        },
+        hasSkill:function(skillId){
+            return this.others.skills.some(function(el, index, array) {
+                return (el.className == className);
+            });
         }
     }
 });

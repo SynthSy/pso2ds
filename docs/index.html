@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/spectre-exp.min.css">
     <link rel="stylesheet" href="css/style.css">
     <script src="js/version.js"></script>
+    <script src="js/skills.js"></script>
     <script src="js/framelib/rawdeflate.js"></script>
     <script src="js/framelib/rawinflate.js"></script>
     <script src="js/framelib/vue.min.js"></script>
@@ -44,8 +45,18 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-2" v-for="(val,index) in [{cmd:'add',name:'追加'},{cmd:'save',name:'セーブ'},{cmd:'load',name:'ロード'},{cmd:'init',name:'初期値'}]">
+                    <div class="col-2" v-for="(val,index) in [{cmd:'add',name:'追加'},{cmd:'init',name:'初期値'},{cmd:'save',name:'セーブ'},{cmd:'load',name:'ロード'}]">
                         <button :id="val.cmd" class="btn btn-lg wh100">{{ val.name }}</button>
+                    </div>
+                    <div class="col-4 saveurl">
+                        <input class="form-input input-lg left" readonly="true" type="text">
+                    </div>
+                    <div class="col-2">
+                        <label class="form-label input-lg center">説明</label>
+                    </div>
+                    <div class="col-6">
+                        <textarea class="form-input" placeholder="説明" rows="1" v-model="params.settings.desc"></textarea>
+                        <input class="form-input input-lg left" type="text" style="display:none" v-model="params.settings.calcid">
                     </div>
                     <div class="col-2">
                         <label class="form-label input-lg center">ｸﾞﾙｰﾌﾟ</label>
@@ -58,23 +69,7 @@
                             <input type="radio" :value="key" v-model="params.settings.atktype">{{ atktype }}
                         </label>
                     </div>
-                    <div class="col-2">
-                        <label class="form-label btn btn-lg" v-bind:class="[ params.settings.nazo ? 'btn-primary' : '' ]"><input type="checkbox" v-model="params.settings.nazo">{{ "謎倍率"+ (params.settings.nazo ? 'あり': 'なし') }}</label>
-                    </div>
-                    <div class="col-2">
-                    </div>
-                    <div class="col-2">
-                        <label class="form-label input-lg center">説明</label>
-                    </div>
-                    <div class="col-10">
-                        <input class="form-input input-lg left" type="text" v-model="params.settings.desc">
-                        <input class="form-input input-lg left" type="text" style="display:none" v-model="params.settings.calcid">
-                    </div>
-                    <div class="col-10 saveurl" style="display:none;">
-                        <input class="form-input input-lg left" type="text">
-                    </div>
-                    <div class="col-2 saveurl" style="display:none;">
-                        <button class="btn btn-lg wh100" onClick="$('.saveurl').hide();">×</button>
+                    <div class="col-4">
                     </div>
                 </div>
             </section>
@@ -133,48 +128,63 @@
                 <range-text name="部位倍率" :max="5" :min="0" :step="0.1" v-model="params.enemy.partrate"></range-text>
                 <range-text name="属性倍率" :max="3" :min="0" :step="0.1" v-model="params.enemy.elmrate"></range-text>
             </section>
-            <section id="pa" class="form-horizontal">
-                <h3>PA & SKILLS & OTHERS</h3>
-                <ul class="tab tab-block">
-                    <li class="tab-item active">
-                        <a href="#">Co</a>
-                    </li>
-                    <li class="tab-item">
-                        <a href="#">Hu</a>
-                    </li>
-                    <li class="tab-item">
-                        <a href="#">Fi</a>
-                    </li>
-                    <li class="tab-item">
-                        <a href="#">Ra</a>
-                    </li>
-                    <li class="tab-item">
-                        <a href="#">Gu</a>
-                    </li>
-                    <li class="tab-item">
-                        <a href="#">Fo</a>
-                    </li>
-                    <li class="tab-item">
-                        <a href="#">Te</a>
-                    </li>
-                    <li class="tab-item">
-                        <a href="#">Br</a>
-                    </li>
-                    <li class="tab-item">
-                        <a href="#">Bo</a>
-                    </li>
-                    <li class="tab-item">
-                        <a href="#">Su</a>
-                    </li>
-                    <li class="tab-item">
-                        <a href="#">Hr</a>
-                    </li>
-                </ul>
-                <div class="col-2">
-                    <label class="form-label btn btn-lg" :class="[ params.enemy.wb ? 'btn-primary' : '' ]">
-                        <input type="checkbox" v-model="params.enemy.wb">{{ params.enemy.wb ? 'WBあり': 'WBなし' }}
+            <section id="others" class="form-horizontal">
+                <div class="form-group bg-gray">
+                    <h3 class="col-7">COMMON & CLASS SKILLS</h3>
+                    <h6 class="col-5" style="white-space: pre;">{{ summary_p }}</h6>
+                </div>
+                <div class="tab tab-block">
+                    <label class="tab-item center active">
+                        <input type="checkbox" readonly checked>Co
+                    </label>
+                    <label class="tab-item center">
+                        <input type="checkbox">Hu
+                    </label>
+                    <label class="tab-item center">
+                        <input type="checkbox">Fi
+                    </label>
+                    <label class="tab-item center">
+                        <input type="checkbox">Ra
+                    </label>
+                    <label class="tab-item center">
+                        <input type="checkbox">Gu
+                    </label>
+                    <label class="tab-item center">
+                        <input type="checkbox">Fo
+                    </label>
+                    <label class="tab-item center">
+                        <input type="checkbox">Te
+                    </label>
+                    <label class="tab-item center">
+                        <input type="checkbox">Br
+                    </label>
+                    <label class="tab-item center">
+                        <input type="checkbox">Bo
+                    </label>
+                    <label class="tab-item center">
+                        <input type="checkbox">Su
+                    </label>
+                    <label class="tab-item center">
+                        <input type="checkbox">Hr
                     </label>
                 </div>
+                <!--<div v-if="hasClass('Co')">
+                    <div class="form-group" v-for="(skill,index) in classSkills('Co')">
+                        <div class="col-4 center">
+                            {{ skill.skillName }}
+                        </div>
+                        <div class="col-8">
+                            <label v-if="skill.label.length=1" class="label label-lg wh100 center" v-bind:class="[potential.critical ? 'label-primary' : 'label-secondary']">
+                                <input type="checkbox" v-model="potential.critical">{{potential.critical ? "C倍率" : "倍率"}}
+                            </label>
+                            <template v-else>
+                                <label v-for="(lbl,index) in skill.label" class="label label-lg center" v-bind:class="[ ? 'label-primary' : 'label-secondary']">
+                                    <input type="checkbox" v-model="potential.critical">{{potential.critical ? "C倍率" : "倍率"}}
+                                </label>
+                            </template>
+                        </div>
+                    </div>
+                </div>-->
             </section>
             <!-- ポップアップ -->
             <div id="popup">
