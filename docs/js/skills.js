@@ -1,6 +1,6 @@
 var skills=[
     {
-        id:"nazo",
+        id:"nz",
         className:"Co",
         skillName:"謎倍率",
         ef:{
@@ -9,7 +9,7 @@ var skills=[
             magical:[0,5],
             tech:[0,5]
         },
-        label:["なし","あり"],
+        label:['なし','あり'],
         default:1
     },
     {
@@ -22,10 +22,11 @@ var skills=[
             magical:[0,20],
             tech:[0,20]
         },
-        label:["なし","あり"]
+        label:["なし","あり"],
+        default:0
     },
     {
-        id:"ss",
+        id:"sst",
         className:"Co",
         skillName:"シフタストライク",
         ef:{
@@ -34,7 +35,8 @@ var skills=[
             magical:[0,10],
             tech:[0,10]
         },
-        label:["なし","あり"]
+        label:["なし","あり"],
+        default:0
     },
     {
         id:"wpb",
@@ -46,7 +48,8 @@ var skills=[
             magical:[0,0,0,0,0],
             tech:[0,2.5,5,7.5,10]
         },
-        label:["なし","1","2","3","4"]
+        label:["なし","1","2","3","4"],
+        default:0
     },
     {
         id:"rm",
@@ -58,7 +61,8 @@ var skills=[
             magical:[0,0],
             tech:[0,10]
         },
-        label:["なし","あり"]
+        label:["なし","あり"],
+        default:0
     },
     {
         id:"g",
@@ -70,7 +74,8 @@ var skills=[
             magical:[0,0,0,0,0,0,0],
             tech:[0,0,0,0,0,0,0]
         },
-        label:["なし","JB1 TMG1-2","DB1 JB2 TMG2-3","DB2 JB3","TD2 DB3","TMGMAX","TD3"]
+        label:["なし","JB1TMG2","DB1JB2TMG3","DB2JB3","TD2DB3","TMGMAX","TD3"],
+        default:0
     },
     {
         id:"ja",
@@ -82,33 +87,21 @@ var skills=[
             magical:[0,0],
             tech:[0,30]
         },
-        label:["なし","あり"]
+        label:["なし","あり"],
+        default:0
     },
     {
         id:"hus",
         className:"Hu",
-        skillName:"フューリーS & Sアップ1 & 2 or ガードSアドバンス",
+        skillName:"フューリーS or ガードS",
         ef:{
-            blow:[0,20,32.3,50],
-            shot:[0,10,21.275,50],
-            magical:[0,0,0,50],
-            tech:[0,0,0,50]
+            blow:[0,20,32.3,38.915,45.53,50],
+            shot:[0,10,21.275,27.33875,33.4025,50],
+            magical:[0,0,5,10,50],
+            tech:[0,0,5,10,50]
         },
-        label:["なし","ﾌｭｰﾘｰ","ﾌｭｰﾘｰ+Sｱｯﾌﾟ1lv5+Sｱｯﾌﾟ2lv5","ｶﾞﾄﾞｽﾀｱﾄﾞﾊﾞﾝｽ"],
-        default:2
-    },
-    {
-        id:"huc",
-        className:"Hu",
-        skillName:"フューリーコンボアップ",
-        ef:{
-            blow:[0,5,10],
-            shot:[0,5,10],
-            magical:[0,0,0],
-            tech:[0,5,10]
-        },
-        label:["なし","5","10"],
-        default:2
+        label:["なし","ﾌｭｰﾘｰ","+Sｱｯﾌﾟ","+ｺﾝﾎﾞ5","+ｺﾝﾎﾞ10","ｶﾞﾄﾞｽﾀｱﾄﾞﾊﾞﾝｽ"],
+        default:4
     },
     {
         id:"warb",
@@ -120,58 +113,47 @@ var skills=[
             magical:[0,3,6,9,12,15],
             tech:[0,3,6,9,12,15]
         },
-        label:["なし","3","6","9","12","15"]
+        label:["なし","1","2","3","4","5"],
+        default:0
     },
     {
         id:"jab",
         className:"Hu",
-        skillName:"JAボーナス1 & 2",
+        skillName:"JAボーナス",
         ef:{
             blow:[0,5,10,21],
             shot:[0,5,10,21],
             magical:[0,0,0,0],
             tech:[0,0,0,0]
         },
-        label:["なし","JA1-5","JA1-10","JA1-10+JA2-10"],
+        label:["なし","1lv5","1lv10","1lv10+2lv10"],
         default:3
     },
     {
         id:"nvg",
         className:"Hu",
-        skillName:"ネバーギブアップ ",
+        skillName:"ネバーギブアップ",
         ef:{
             blow:["0","200","220","240","260","300"],
             shot:["0","0","0","0","0","0"],
             magical:["0","0","0","0","0","0"],
             tech:["0","0","0","0","0","0"]
         },
-        label:["なし","1","2","3","4","5"]
+        label:["なし","1","2","3","4","5"],
+        default:0
     },
     {
         id:"fis",
         className:"Fi",
-        skillName:"ブレイブS or ワイズS",
+        skillName:"ﾌﾞﾚｲﾌﾞS or ﾜｲｽﾞS",
         ef:{
-            blow:[0,30,35,40],
-            shot:[0,30,35,40],
-            magical:[0,30,35,40],
-            tech:[0,30,35,40]
+            blow:[0,30,35,40,54,75.5],
+            shot:[0,30,35,40,54,75.5],
+            magical:[0,30,35,40,54,75.5],
+            tech:[0,30,35,40,54,75.5]
         },
-        label:["なし","ﾜｲｽﾞ前","ﾌﾞﾚｲﾌﾞ後orﾜｲｽﾞ後","ﾌﾞﾚｲﾌﾞ前"],
+        label:["なし","ﾜｲｽﾞ前","ﾌﾞﾚｲﾌﾞ後orﾜｲｽﾞ後","ﾌﾞﾚｲﾌﾞ前","+ﾌﾞﾚｲﾌﾞSｱｯﾌﾟ","ﾜｲｽﾞSｱｯﾌﾟ"],
         default:2
-    },
-    {
-        id:"fisup",
-        className:"Fi",
-        skillName:"スタンスアップ",
-        ef:{
-            blow:[0,10,30],
-            shot:[0,10,30],
-            magical:[0,10,30],
-            tech:[0,10,30]
-        },
-        label:["なし","ﾌﾞﾚｲﾌﾞ","ﾜｲｽﾞ"],
-        default:1
     },
     {
         id:"lmtb",
@@ -183,7 +165,8 @@ var skills=[
             magical:[0,0,0,0,0,0],
             tech:[0,0,0,0,0,0]
         },
-        label:["なし","1","2","3","4","5"]
+        label:["なし","1","2","3","4","5"],
+        default:0
     },
     {
         id:"crst",
@@ -201,7 +184,7 @@ var skills=[
     {
         id:"tajab",
         className:"Fi",
-        skillName:"テックアーツJAボーナス",
+        skillName:"ﾃｯｸｱｰﾂJAﾎﾞｰﾅｽ",
         ef:{
             blow:[0,5,6,8,10,15],
             shot:[0,5,6,8,10,15],
@@ -222,7 +205,7 @@ var skills=[
             tech:["0","20","22","24","26","28","34","40","60","80","100"]
         },
         label:["なし","1","2","3","4","5","6","7","8","9","10"],
-        default:4
+        default:0
     },
     {
         id:"deads",
@@ -234,7 +217,8 @@ var skills=[
             magical:["0","40","44","49","54","60","67","75","100","125","150"],
             tech:["0","40","44","49","54","60","67","75","100","125","150"]
         },
-        label:["なし","1","2","3","4","5","6","7","8","9","10"]
+        label:["なし","1","2","3","4","5","6","7","8","9","10"],
+        default:0
     },
     {
         id:"pps",
@@ -246,7 +230,8 @@ var skills=[
             magical:["0","50","65","80","95","110","125","140","155","170","200"],
             tech:["0","50","65","80","95","110","125","140","155","170","200"]
         },
-        label:["なし","1","2","3","4","5","6","7","8","9","10"]
+        label:["なし","1","2","3","4","5","6","7","8","9","10"],
+        default:0
     },
     {
         id:"crzb",
@@ -259,7 +244,7 @@ var skills=[
             tech:["0","0","0","0","0","0"]
         },
         label:["なし","1","2","3","4","5"],
-        default:5
+        default:0
     },
     {
         id:"chs",
@@ -271,19 +256,21 @@ var skills=[
             magical:[0,0,0,0],
             tech:[0,0,0,0]
         },
-        label:["なし","10","15","25"]
+        label:["なし","10","15","25"],
+        default:0
     },
     {
         id:"chsp",
         className:"Fi",
-        skillName:"チェイスアドバンスプラス",
+        skillName:"ﾁｪｲｽｱﾄﾞﾊﾞﾝｽﾌﾟﾗｽ",
         ef:{
             blow:[0,5,7,9,11,15],
             shot:[0,5,7,9,11,15],
             magical:[0,5,7,9,11,15],
             tech:[0,5,7,9,11,15]
         },
-        label:["なし","1","2","3","4","5"]
+        label:["なし","1","2","3","4","5"],
+        default:0
     },
     {
         id:"pwb",
@@ -295,12 +282,13 @@ var skills=[
             magical:["0","0","0","0","0","0"],
             tech:["0","0","0","0","0","0"]
         },
-        label:["なし","1","2","3","4","5"]
+        label:["なし","1","2","3","4","5"],
+        default:0
     },
     {
         id:"wha",
         className:"Ra",
-        skillName:"ウィークヒットアドバンス1 & 2",
+        skillName:"ｳｨｰｸﾋｯﾄｱﾄﾞﾊﾞﾝｽ",
         ef:{
             blow:[0,0,0],
             shot:[0,15,32.25],
@@ -313,7 +301,7 @@ var skills=[
     {
         id:"ssms",
         className:"Ra",
-        skillName:"スタンディング1 & 2 or ムービングスナイプ",
+        skillName:"ｽﾀﾝﾃﾞｨﾝｸﾞorﾑｰﾋﾞﾝｸﾞｽﾅｲﾌﾟ",
         ef:{
             blow:[0,0,0,0,0],
             shot:[0,20.75,25,32.25,43.75],
@@ -333,7 +321,8 @@ var skills=[
             magical:[0,4,8,12,16,20],
             tech:[0,4,8,12,16,20]
         },
-        label:["なし","1","2","3","4","5"]
+        label:["なし","1","2","3","4","5"],
+        default:0
     },
     {
         id:"ss",
@@ -358,7 +347,8 @@ var skills=[
             magical:[0,20,30,50,60,65,70,75,80,85,90,100],
             tech:[0,20,30,50,60,65,70,75,80,85,90,100]
         },
-        label:["1～8","9～18","19～28","29～38","39～48","49～58","59～68","69～78","79～88","89～98","99～100"]
+        label:["なし","1-","9-","19-","29-","39-","49-","59-","69-","79-","89-","99-"],
+        default:0
     },
     {
         id:"cf",
@@ -370,7 +360,8 @@ var skills=[
             magical:[0,0,0,0],
             tech:[0,0,0,0]
         },
-        label:["なし","1","5","10"]
+        label:["なし","1","5","10"],
+        default:0
     },
     {
         id:"ht",
@@ -388,7 +379,7 @@ var skills=[
     {
         id:"zra",
         className:"Gu",
-        skillName:"ゼロレンジアドバンス1 & 2",
+        skillName:"ゼロレンジアドバンス",
         ef:{
             blow:[0,0,0,0],
             shot:[0,5,10,15.5,21],
@@ -446,7 +437,8 @@ var skills=[
             magical:[0,2,4,6,8,10],
             tech:[0,2,4,6,8,10]
         },
-        label:["なし","1","2","3","4","5"]
+        label:["なし","1","2","3","4","5"],
+        default:0
     },
     {
         id:"ff",
@@ -458,7 +450,8 @@ var skills=[
             magical:["0","20","40","60","80","100","120","140","160","180","200"],
             tech:["0","20","40","60","80","100","120","140","160","180","200"]
         },
-        label:["なし","1","2","3","4","5","6","7","8","9","10"]
+        label:["なし","1","2","3","4","5","6","7","8","9","10"],
+        default:0
     },
     {
         id:"ffa",
@@ -470,7 +463,8 @@ var skills=[
             magical:["0","20","40","60","80","100","120","140","160","180","200"],
             tech:["0","20","40","60","80","100","120","140","160","180","200"]
         },
-        label:["なし","1","2","3","4","5","6","7","8","9","10"]
+        label:["なし","1","2","3","4","5","6","7","8","9","10"],
+        default:0
     },
     {
         id:"ffab",
@@ -482,7 +476,8 @@ var skills=[
             magical:["0","100"],
             tech:["0","100"]
         },
-        label:["なし","あり"]
+        label:["なし","あり"],
+        default:0
     },
     {
         id:"tjaa",
@@ -500,7 +495,7 @@ var skills=[
     {
         id:"tjant",
         className:"Fo",
-        skillName:"チャージテック or ノーマルテックアドバンス1 & 2",
+        skillName:"ﾁｬｰｼﾞorﾉｰﾏﾙﾃｯｸｱﾄﾞﾊﾞﾝｽ",
         ef:{
             blow:[0,0,0],
             shot:[0,0,0],
@@ -520,20 +515,21 @@ var skills=[
             magical:[0,0],
             tech:[0,20]
         },
-        label:["なし","あり"]
+        label:["なし","あり"],
+        default:0
     },
     //エレメントコンバージョンは独自計算のため組み込み済み
     {
         id:"fom",
         className:"Fo",
-        skillName:"属性マスタリー1 & 2",
+        skillName:"属性マスタリー(Fo)",
         ef:{
             blow:[0,0,0,0,0,0],
             shot:[0,0,0,0,0,0],
             magical:[0,0,0,0,0,0],
             tech:[0,5,18.8,25.4,29.6,36.8,44]
         },
-        label:["なし","ﾏｽ1lv1","ﾏｽ1lv2+ﾏｽ2lv1","ﾏｽ1lv5+ﾏｽ2lv1","ﾏｽ1lv2+ﾏｽ2lv5","ﾏｽ1lv5+ﾏｽ2lv5","ﾏｽ1lv10+ﾏｽ2lv5"],
+        label:["なし","1lv1","1lv2+2lv1","1lv5+2lv1","1lv2+2lv5","1lv5+2lv5","1lv10+2lv5"],
         default:6
     },
     {
@@ -566,14 +562,14 @@ var skills=[
     {
         id:"tem",
         className:"Te",
-        skillName:"属性マスタリー1 & 2",
+        skillName:"属性マスタリー(Te)",
         ef:{
             blow:[0,0,0,0,0,0],
             shot:[0,0,0,0,0,0],
             magical:[0,0,0,0,0,0],
             tech:[0,5,18.8,25.4,29.6,36.8,44]
         },
-        label:["なし","ﾏｽ1lv1","ﾏｽ1lv2+ﾏｽ2lv1","ﾏｽ1lv5+ﾏｽ2lv1","ﾏｽ1lv2+ﾏｽ2lv5","ﾏｽ1lv5+ﾏｽ2lv5","ﾏｽ1lv10+ﾏｽ2lv5"],
+        label:["なし","1lv1","1lv2+2lv1","1lv5+2lv1","1lv2+2lv5","1lv5+2lv5","1lv10+2lv5"],
         default:6
     },
     {
@@ -592,7 +588,7 @@ var skills=[
     {
         id:"brsup",
         className:"Br",
-        skillName:"スタンスアップ & スタンスチャージ",
+        skillName:"ｽﾀﾝｽｱｯﾌﾟ & ｽﾀﾝｽﾁｬｰｼﾞ",
         ef:{
             blow:[0,10,21],
             shot:[0,10,21],
@@ -625,19 +621,20 @@ var skills=[
             magical:[0,0,0,0,0,0],
             tech:[0,0,0,0,0,0]
         },
-        label:["なし","1","2","3","4","5"]
+        label:["なし","1","2","3","4","5"],
+        default:0
     },
     {
         id:"rpup",
         className:"Br",
-        skillName:"ラピッドシュートアップ1 & 2",
+        skillName:"ラピッドシュートアップ",
         ef:{
             blow:["0","0","0","0","0"],
             shot:["0","100","240","440","500"],
             magical:["0","0","0","0","0"],
             tech:["0","0","0","0","0"]
         },
-        label:["なし","ｱｯﾌﾟ1lv1","ｱｯﾌﾟ1lv3+ｱｯﾌﾟ2lv1","ｱｯﾌﾟ1lv3+ｱｯﾌﾟ2lv5","ｱｯﾌﾟ1lv5+ｱｯﾌﾟ2lv5"],
+        label:["なし","1lv1","1lv3+2lv1","1lv3+2lv5","1lv5+2lv5"],
         default:4
     },
     {
@@ -663,7 +660,8 @@ var skills=[
             magical:[0,35],
             tech:[0,35]
         },
-        label:["なし","あり"]
+        label:["なし","あり"],
+        default:0
     },
     {
         id:"cs",
@@ -675,12 +673,13 @@ var skills=[
             magical:[0,0,0],
             tech:[0,0,0]
         },
-        label:["なし","3","5"]
+        label:["なし","3","5"],
+        default:0
     },
     {
         id:"bos",
         className:"Bo",
-        skillName:"エレメンタルS or ブレイクS or SDボーナス",
+        skillName:"ｴﾚﾒﾝﾀﾙS or ﾌﾞﾚｲｸS",
         ef:{
             blow:[0,15,17.5,20,35],
             shot:[0,15,17.5,20,35],
@@ -706,14 +705,15 @@ var skills=[
     {
         id:"pbfup",
         className:"Bo",
-        skillName:"フォトンブレードフィーバーアップ",
+        skillName:"PBF&ﾌｨｰﾊﾞｰｱｯﾌﾟ",
         ef:{
-            blow:[0,30],
-            shot:[0,0],
-            magical:[0,0],
-            tech:[0,0]
+            blow:[0,100,160],
+            shot:[0,0,0],
+            magical:[0,0,0],
+            tech:[0,0,0]
         },
-        label:["なし","あり"]
+        label:["なし","PBF","PBF+ﾌｨｰﾊﾞｰｱｯﾌﾟ"],
+        default:0
     },
     {
         id:"rpja",
@@ -725,7 +725,8 @@ var skills=[
             magical:[0,0],
             tech:[0,15]
         },
-        label:["なし","あり"]
+        label:["なし","あり"],
+        default:0
     },
     {
         id:"sea",
@@ -756,7 +757,7 @@ var skills=[
     {
         id:"pasf",
         className:"Su",
-        skillName:"ポイントアシスト & サポートファイア",
+        skillName:"ﾎﾟｲﾝﾄｱｼｽﾄ & ｻﾎﾟｰﾄﾌｧｲｱ",
         ef:{
             blow:[0,10,15,26.5],
             shot:[0,10,15,26.5],
@@ -769,7 +770,7 @@ var skills=[
     {
         id:"all",
         className:"Su",
-        skillName:"オールアタックボーナス1 & 2",
+        skillName:"オールアタックボーナス",
         ef:{
             blow:[0,32.25],
             shot:[0,32.25],
@@ -802,7 +803,8 @@ var skills=[
             magical:[0,10],
             tech:[0,5]
         },
-        label:["なし","あり"]
+        label:["なし","あり"],
+        default:0
     },
     {
         id:"hrt",
@@ -814,7 +816,8 @@ var skills=[
             magical:["0","999"],
             tech:["0","999"]
         },
-        label:["なし","あり"]
+        label:["なし","あり"],
+        default:0
     },
     {
         id:"hrct",
@@ -826,7 +829,8 @@ var skills=[
             magical:[0,10],
             tech:[0,0]
         },
-        label:["なし","あり"]
+        label:["なし","あり"],
+        default:0
     },
     {
         id:"hrb",
@@ -844,7 +848,7 @@ var skills=[
     {
         id:"hrwb",
         className:"Hr",
-        skillName:"ヒーローウェポンブースト1 & 2",
+        skillName:"ヒーローウェポンブースト",
         ef:{
             blow:[0,125],
             shot:[0,125],
@@ -864,7 +868,8 @@ var skills=[
             magical:[0,10],
             tech:[0,10]
         },
-        label:["なし","あり"]
+        label:["なし","あり"],
+        default:0
     },
     {
         id:"ahc",
@@ -876,6 +881,16 @@ var skills=[
             magical:[0,0,0,0,0],
             tech:[0,0,0,0,0]
         },
-        label:["なし","1","2","3","4","5"]
+        label:["なし","1","2","3","4","5"],
+        default:0
     }
 ]
+
+var skillsId={};
+for (var i=0;i<skills.length;i++){
+    var key=skills[i].id
+    skillsId[key]={
+        className:skills[i].className,
+        ef:skills[i].ef
+    };
+}

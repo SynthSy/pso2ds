@@ -39,7 +39,7 @@
             <section id="settings" class="form-horizontal">
                 <div class="form-group bg-gray">
                     <h3 class="col-3">SETTINGS</h3>
-                    <h6 class="col-7" style="white-space: pre;">{{ summary_s }}</h6>
+                    <h6 class="col-7" style="white-space: pre;">{{ summary_d }}</h6>
                     <div class="col-2">
                         <button id="version" class="btn btn-lg wh100" style="padding:0;">{{ "v"+version_r[0].ver.toFixed(2)}}</button>
                     </div>
@@ -55,7 +55,7 @@
                         <label class="form-label input-lg center">説明</label>
                     </div>
                     <div class="col-6">
-                        <textarea class="form-input" placeholder="説明" rows="1" v-model="params.settings.desc"></textarea>
+                        <input class="form-input" placeholder="説明" v-model="params.settings.desc">
                         <input class="form-input input-lg left" type="text" style="display:none" v-model="params.settings.calcid">
                     </div>
                     <div class="col-2">
@@ -64,7 +64,7 @@
                     <div class="col-2">
                         <input class="form-input input-lg left" type="text" v-model="params.settings.group">
                     </div>
-                    <div class="col-2" v-for="(atktype,key) in ['打撃','射撃','ペット','テク']">
+                    <div class="col-2" v-for="(atktype,key) in ['打撃','射撃','ﾍﾟｯﾄHrﾀﾘｽ','テク']">
                         <label class="btn btn-lg wh100" style="padding-left:0;padding-right:0;" :class="[ key==params.settings.atktype ? 'btn-primary' : '' ]">
                             <input type="radio" :value="key" v-model="params.settings.atktype">{{ atktype }}
                         </label>
@@ -75,8 +75,9 @@
             </section>
             <section id="player" class="form-horizontal">
                 <div class="form-group bg-gray">
-                    <h3 class="col-3">PLAYER</h3>
-                    <h6 class="col-9" style="white-space: pre;">{{ summary_p }}</h6>
+                    <h3 class="col-6">PLAYER</h3>
+                    <h6 class="col-5" style="white-space: pre;">{{ summary_p }}</h6>
+                    <h3 class="col-1"></h3>
                 </div>
                 <range-text name="素手攻撃力" :max="4000" :min="500" :step="1" v-model="params.player.atk" :statuslabel="true"></range-text>
                 <range-text name="技量" :max="1600" :min="200" :step="1" v-model="params.player.dex"></range-text>
@@ -84,8 +85,9 @@
             </section>
             <section id="weapon" class="form-horizontal">
                 <div class="form-group bg-gray">
-                    <h3 class="col-3">WEAPON</h3>
-                    <h6 class="col-9" style="white-space: pre;">{{ summary_w }}</h6>
+                    <h3 class="col-6">WEAPON</h3>
+                    <h6 class="col-5" style="white-space: pre;">{{ summary_w }}</h6>
+                    <h3 class="col-1"></h3>
                 </div>
                 <range-text name="攻撃力" :max="3000" :min="500" :step="1" v-model="params.weapon.atk"></range-text>
                 <range-text name="OP(固定値)" :max="400" :min="0" :step="1" v-model="params.weapon.op" :statuslabel="true"></range-text>
@@ -103,8 +105,9 @@
             </section>
             <section id="equips" class="form-horizontal">
                 <div class="form-group bg-gray">
-                    <h3 class="col-3">EQUIPS</h3>
-                    <h6 class="col-9" style="white-space: pre;">{{ summary_q }}</h6>
+                    <h3 class="col-6">EQUIPS</h3>
+                    <h6 class="col-5" style="white-space: pre;">{{ summary_q }}</h6>
+                    <h3 class="col-1"></h3>
                 </div>
                 <range-text name="ユニOP&リングステ" :max="400" :min="0" :step="1" v-model="params.equips.unitsop" :statuslabel="true"></range-text>
                 <range-text v-for="(ring,index) in params.equips.rings" :key="index" 
@@ -120,71 +123,71 @@
             </section>
             <section id="enemy" class="form-horizontal">
                 <div class="form-group bg-gray">
-                    <h3 class="col-3">ENEMY</h3>
-                    <h6 class="col-9" style="white-space: pre;">{{ summary_e }}</h6>
+                    <h3 class="col-6">ENEMY</h3>
+                    <h6 class="col-5" style="white-space: pre;">{{ summary_e }}</h6>
+                    <h3 class="col-1"></h3>
                 </div>
-                <range-text name="防御力" :max="1000" :min="100" :step="1" v-model="params.enemy.def" :statuslabel="true"></range-text>
+                <range-text name="防御力" :max="1000" :min="100" :step="1" v-model="params.enemy.def"></range-text>
                 <range-text name="技量" :max="1000" :min="100" :step="1" v-model="params.enemy.dex"></range-text>
                 <range-text name="部位倍率" :max="5" :min="0" :step="0.1" v-model="params.enemy.partrate"></range-text>
                 <range-text name="属性倍率" :max="3" :min="0" :step="0.1" v-model="params.enemy.elmrate"></range-text>
             </section>
-            <section id="others" class="form-horizontal">
+            <section id="pa" class="form-horizontal">
                 <div class="form-group bg-gray">
-                    <h3 class="col-7">COMMON & CLASS SKILLS</h3>
-                    <h6 class="col-5" style="white-space: pre;">{{ summary_p }}</h6>
+                    <h3 class="col-6">PA & 任意倍率</h3>
+                    <h6 class="col-5" style="white-space: pre;">{{ summary_pa }}</h6>
+                    <h3 class="col-1"></h3>
+                </div>
+                <div class="form-group">
+                    <div class="col-2 center" style="padding-top:.4em;">
+                        PA倍率
+                    </div>
+                    <div class="col-2 center">
+                        <input class="form-input input-lg right" type="text" v-model="params.others.pa">
+                    </div>
+                    <div class="col-2 center" style="padding-top:.4em;">
+                        PA技量補正
+                    </div>
+                    <div class="col-2 center">
+                        <input class="form-input input-lg right" type="text" v-model="params.others.padex">
+                    </div>
+                    <div class="col-2 center" style="padding-top:.4em;">
+                        任意倍率
+                    </div>
+                    <div class="col-2 center">
+                        <input class="form-input input-lg right" type="text" v-model="params.others.any_r">
+                    </div>
+                </div>
+            </section>
+            <section id="skills" class="form-horizontal">
+                <div class="form-group bg-gray">
+                    <h3 class="col-6">COMMON & CLASS SKILLS</h3>
+                    <h6 class="col-5" style="white-space: pre;">{{ summary_s }}</h6>
+                    <h3 class="col-1"></h3>
                 </div>
                 <div class="tab tab-block">
-                    <label class="tab-item center active">
-                        <input type="checkbox" readonly checked>Co
-                    </label>
-                    <label class="tab-item center">
-                        <input type="checkbox">Hu
-                    </label>
-                    <label class="tab-item center">
-                        <input type="checkbox">Fi
-                    </label>
-                    <label class="tab-item center">
-                        <input type="checkbox">Ra
-                    </label>
-                    <label class="tab-item center">
-                        <input type="checkbox">Gu
-                    </label>
-                    <label class="tab-item center">
-                        <input type="checkbox">Fo
-                    </label>
-                    <label class="tab-item center">
-                        <input type="checkbox">Te
-                    </label>
-                    <label class="tab-item center">
-                        <input type="checkbox">Br
-                    </label>
-                    <label class="tab-item center">
-                        <input type="checkbox">Bo
-                    </label>
-                    <label class="tab-item center">
-                        <input type="checkbox">Su
-                    </label>
-                    <label class="tab-item center">
-                        <input type="checkbox">Hr
-                    </label>
+                    <template v-for="cls in ['Co','Hu','Fi','Ra','Gu','Fo','Te','Br','Bo','Su','Hr']">
+                        <label class="tab-item center" v-bind:class="{ active:hasClass(cls) }" :id="'tab-'+cls">
+                            <input type="checkbox" v-model="hasClass(cls)" value="1" v-on:click.stop.prevent="changeClass(cls)">{{ cls }}
+                        </label>
+                    </template>
                 </div>
-                <!--<div v-if="hasClass('Co')">
-                    <div class="form-group" v-for="(skill,index) in classSkills('Co')">
-                        <div class="col-4 center">
-                            {{ skill.skillName }}
-                        </div>
-                        <div class="col-8">
-                            <label v-if="skill.label.length=1" class="label label-lg wh100 center" v-bind:class="[potential.critical ? 'label-primary' : 'label-secondary']">
-                                <input type="checkbox" v-model="potential.critical">{{potential.critical ? "C倍率" : "倍率"}}
-                            </label>
-                            <template v-else>
-                                <label v-for="(lbl,index) in skill.label" class="label label-lg center" v-bind:class="[ ? 'label-primary' : 'label-secondary']">
-                                    <input type="checkbox" v-model="potential.critical">{{potential.critical ? "C倍率" : "倍率"}}
-                                </label>
-                            </template>
+                <template v-for="cls in ['Co','Hu','Fi','Ra','Gu','Fo','Te','Br','Bo','Su','Hr']">
+                    <div class="classskills" v-if="hasClass(cls)">
+                        <div class="form-group" v-for="skill in classSkills(cls)">
+                            <div class="col-3 center" style="padding-top:.4em;">
+                                {{ skill.skillName }}
+                            </div>
+                            <div class="col-9" style="display:flex;">
+                                <div v-for="(lbl,idx) in skill.label" v-bind:class="idx==0 ? 'skillnone' : 'skill'">
+                                    <label class="btn btn-lg wh100 center" v-bind:class="[ idx==(!params.others.skills[skill.id] ? 0 : params.others.skills[skill.id]) ? 'btn-primary' : '' ]">
+                                        <input type="radio" :value="idx" v-model="params.others.skills[skill.id]">{{ lbl }}
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>-->
+                </template>
             </section>
             <!-- ポップアップ -->
             <div id="popup">

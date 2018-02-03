@@ -51,10 +51,14 @@ function gAppend(){
         
     chart_g.append("text")
         .style("fill", "white")
-        .style("font-size", "16px")
-        .style("text-anchor", "end")
-        .attr("y", 34)
+        .style("font-weight", "900")
+        .style("font-size", "18px")
+        .style("text-anchor", "start")
+        .style("stroke", "#5755d9")
+        .style("stroke-width", "5px")
+        .attr("y", 38)
         .text("")
+        .attr("paint-order","stroke")
         .attr("class", "dmg");
 
     var desc = d3.select('.desc')
@@ -153,9 +157,6 @@ function gUpdate(){
         .data(calcs)
         .selectAll(".dmg")
         .attr('width', "100%")
-        .attr("x", function(d){
-            return x(d.graph.bars[0])-5;
-        })
         .text(function(d){
             return ["max "+d.graph.bars[1],"min "+d.graph.bars[0],"mean "+d.graph.line].join(" ");
         });

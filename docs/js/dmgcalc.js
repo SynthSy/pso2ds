@@ -1,3 +1,4 @@
+
 var init_params = {
     settings:{
         atktype:0,
@@ -33,12 +34,10 @@ var init_params = {
         elmrate:1.0
     },
     others:{
-        nazo:true,
         any_r:0,
-        pa:[
-            {power:100,dexcollect:100}
-        ],
-        skills:[]
+        pa:100,
+        padex:100,
+        skills:{nz:1}
     },
     graph: {
         bars : [564,585],
@@ -60,7 +59,6 @@ function pAdd(){
         dmg_calc.params=current_params;
     }
     current_params.settings.dmgid=$.guid;
-    
     gAppend();
 }
 pAdd();
@@ -148,14 +146,16 @@ var dmg_calc = new Vue({
     el: '#params',
     data: {
         params:current_params,
-        skilldata:skills,
         version:v
     },
     computed: {
-        // 表示用サマリー(設定)
-        summary_s : function(){
-            return ['攻撃属性 '+['打撃','射撃','ペット','テク'][this.params.settings.atktype],'グループ '+this.params.settings.group].join(' ') + '\r\n' +
-                   ["MAX "+this.dmg_cmax,'MIN '+this.dmg_min,"MEAN "+this.dmg_mean].join(" ");
+        // 攻撃属性の変換
+        atkstring : function(){
+            return ['blow','shot','magical','tech'][this.params.settings.atktype]
+        },
+        // 表示用サマリー(ダメージ)
+        summary_d : function(){
+            return ['MAX '+this.dmg_max,'MIN '+this.dmg_min,'MEAN '+this.dmg_mean].join(' ')
         },
         // 表示用サマリー(プレイヤー)
         summary_p : function(){
@@ -202,16 +202,45 @@ var dmg_calc = new Vue({
         summary_e : function(){
             return ['防御力 '+this.params.enemy.def,'技量 '+this.params.enemy.dex,'\r\n部位倍率× '+this.params.enemy.partrate.toFixed(2),'属性倍率×'+this.params.enemy.elmrate.toFixed(2)].join(' ')
         },
+        // 表示用サマリー(PA任意倍率)
+        summary_pa : function(){
+            return ['PA '+this.params.others.pa,'PA技量補正 '+this.params.others.padex,'\r\n任意倍率× '+((100+Number(this.params.others.any_r))/100).toFixed(2)].join(' ');
+        },
+        
+        // 表示用サマリー(スキル)
+        summary_s : function(){
+            var skillef=this.summary_s_skills;
+            return ["倍率×"+skillef.r.toFixed(2),"クリティカル倍率×"+skillef.cr.toFixed(2),"\r\nステ＋"+skillef.st.toFixed(2)].join(' ');
+        },
+        summary_s_skills : function(){
+            var ef = {r:1,cr:1,st:0};
+            var val;
+            for (var key in this.params.others.skills){
+                val=skillsId[key].ef[this.atkstring][this.params.others.skills[key]];
+                
+                switch (typeof val){
+                    case 'string':
+                        ef.st += Number(val);
+                        break;
+                    case 'object':
+                        ef.cr *= (100+Number(val))/100;
+                        break;
+                    case 'number':
+                        ef.r *= (100+Number(val))/100;
+                        break;
+                }
+            }
+            return ef;
+        },
         // 通常倍率
         all_r:function(){
             var r = 1;
             
-            var rings = this.summary_q_rings;
-            var potentials = this.summary_w_potentials;
-            
-            r *= rings.r;
-            r *= potentials.r;
-            r *= this.params.others.nazo ? 1.05 : 1;
+            r *= this.summary_q_rings.r;
+            r *= this.summary_w_potentials.r;
+            r *= this.summary_s_skills.r;
+            r *= Number(this.params.others.pa)/100
+            r *= (100+Number(this.params.others.any_r))/100;
             
             return r;
         },
@@ -219,11 +248,9 @@ var dmg_calc = new Vue({
         all_cr:function(){
             var cr = 1;
             
-            var rings = this.summary_q_rings;
-            var potentials = this.summary_w_potentials;
-            
-            cr *= rings.cr;
-            cr *= potentials.cr;
+            cr *= this.summary_q_rings.cr;
+            cr *= this.summary_w_potentials.cr;
+            cr *= this.summary_s_skills.cr;
             
             return cr;
         },
@@ -235,7 +262,8 @@ var dmg_calc = new Vue({
         _atk:function(){
             return Number(this.params.player.atk)
                 +Number(this.params.weapon.op)
-                +Number(this.params.equips.unitsop);
+                +Number(this.params.equips.unitsop)
+                +Number(this.summary_s_skills.st);
         },
         // 素手ダメージ
         dmg_bare:function(){
@@ -293,7 +321,7 @@ var dmg_calc = new Vue({
         },
         // クリティカル倍率を抜いた最大ダメージ
         dmg_max:function(){
-            return this.dmg_bare+this.dmg_welm+this.dmg_wmax+this.dmg_edef;
+            return Math.round(this.dmg_bare+this.dmg_welm+this.dmg_wmax+this.dmg_edef);
         },
         // クライアント時の最大ダメージ
         dmg_cmax:function(){
@@ -324,24 +352,31 @@ var dmg_calc = new Vue({
     },
     methods:{
         classSkills:function(className){
-            return this.skilldata.filter(function(el, index, array) {
-                return (el.className == className);
-            });
-        },
-        changeClass:function(className){
-            return this.skilldata.filter(function(el, index, array) {
+            return skills.filter(function(el, index, array) {
                 return (el.className == className);
             });
         },
         hasClass:function(className){
-            return this.others.skills.some(function(el, index, array) {
-                return (el.className == className);
-            });
+            for (var key in this.params.others.skills){
+                if (skillsId[key].className==className)
+                    return 1;
+            }
+            return 0;
         },
-        hasSkill:function(skillId){
-            return this.others.skills.some(function(el, index, array) {
-                return (el.className == className);
-            });
+        changeClass:function(className){
+            var cs = this.classSkills(className);
+            if (this.hasClass(className)){
+                for (var i=0;i<cs.length;i++){
+                    this.$delete(this.params.others.skills,cs[i].id);
+                }
+            }
+            else{
+                for (var i=0;i<cs.length;i++){
+                    if (cs[i]["default"] !== 0)
+                    this.$set(this.params.others.skills,cs[i].id,cs[i]["default"]);
+                }
+            }
+            return 0;
         }
     }
 });
