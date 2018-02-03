@@ -375,6 +375,7 @@ var dmg_calc = new Vue({
                     if (cs[i]["default"] !== 0)
                     this.$set(this.params.others.skills,cs[i].id,cs[i]["default"]);
                 }
+                $('#wrap').animate({scrollTop: $('#wrap')[0].scrollHeight}, 'slow');
             }
             return 0;
         }
