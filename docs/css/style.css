@@ -87,7 +87,9 @@ body,html{
     display:block;
     text-decoration:none
 }
-
+.form-switch{
+    margin:0;
+}
 #skills .classskills>.form-group {
     margin-top:.4em;
 }

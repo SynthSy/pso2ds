@@ -153,7 +153,7 @@ var skills=[
             tech:[0,30,35,40,54,75.5]
         },
         label:["なし","ﾜｲｽﾞ前","ﾌﾞﾚｲﾌﾞ後orﾜｲｽﾞ後","ﾌﾞﾚｲﾌﾞ前","+ﾌﾞﾚｲﾌﾞSｱｯﾌﾟ","ﾜｲｽﾞSｱｯﾌﾟ"],
-        default:2
+        default:4
     },
     {
         id:"lmtb",
@@ -179,7 +179,7 @@ var skills=[
             tech:[[0],[15]]
         },
         label:["なし","あり"],
-        default:1
+        default:0
     },
     {
         id:"tajab",

@@ -1,4 +1,5 @@
 var calcs=[];
+var gcalcs=[];
 // グラフ関係の関数
 var color = ["#5755d9", "#f1f1fc"];   // 積み上げ棒グラフの色
 var barHeight = 44;

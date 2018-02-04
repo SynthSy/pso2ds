@@ -68,14 +68,14 @@
                         <label class="form-label input-lg center">説明</label>
                     </div>
                     <div class="col-6">
-                        <input class="form-input" placeholder="説明" v-model="params.settings.desc">
+                        <input class="form-input" placeholder="説明" v-model.lazy="params.settings.desc">
                         <input class="form-input input-lg left" type="text" style="display:none" v-model="params.settings.calcid">
                     </div>
                     <div class="col-2">
                         <label class="form-label input-lg center">ｸﾞﾙｰﾌﾟ</label>
                     </div>
                     <div class="col-2">
-                        <input class="form-input input-lg left" type="text" v-model="params.settings.group">
+                        <input class="form-input input-lg left" type="text" v-model.lazy="params.settings.group">
                     </div>
                     <div class="col-2" v-for="(atktype,key) in ['打撃','射撃','ペット','テク']">
                         <label class="btn btn-lg wh100" style="padding-left:0;padding-right:0;" :class="[ key==params.settings.atktype ? 'btn-primary' : '' ]">
@@ -191,19 +191,19 @@
                         PA倍率
                     </div>
                     <div class="col-2 center">
-                        <input class="form-input input-lg right" type="text" v-model="params.others.pa">
+                        <input class="form-input input-lg right" type="text" v-model.lazy="params.others.pa">
                     </div>
                     <div class="col-2 center" style="padding-top:.4em;">
                         PA技量補正
                     </div>
                     <div class="col-2 center">
-                        <input class="form-input input-lg right" type="text" v-model="params.others.padex">
+                        <input class="form-input input-lg right" type="text" v-model.lazy="params.others.padex">
                     </div>
                     <div class="col-2 center" style="padding-top:.4em;">
                         任意倍率
                     </div>
                     <div class="col-2 center">
-                        <input class="form-input input-lg right" type="text" v-model="params.others.any_r">
+                        <input class="form-input input-lg right" type="text" v-model.lazy="params.others.any_r">
                     </div>
                 </div>
             </section>
