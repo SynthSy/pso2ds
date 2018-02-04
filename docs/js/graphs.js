@@ -27,6 +27,7 @@ function gAppend(){
         .attr('id', function(d) {
             return d.settings.dmgid;
         })
+        .attr('class',"bars")
         .on('click', function (d,i) {
             var dmgid=d.settings.dmgid;
             pSelect(dmgid);
@@ -122,6 +123,7 @@ function gUpdate(){
             // barsに入っている配列を渡す(calcs.graph.bars))
             return d.graph.bars;
         })
+        .transition()
         .attr("x",function(d,i){
             // 横位置（配列にmin,cmaxの順で入っているので自分の一つ前の値をとる）
             //return x(i == 0 ? 0:this.parentNode.__data__.min);
@@ -130,6 +132,7 @@ function gUpdate(){
             return x(val);
         })	
         // バーの高さ
+        .transition()
         .attr("width",function(d,i){
             // 横幅（配列にmin,cmaxの順で入っているので差分をとる）
             var arr=this.parentNode.__data__.graph.bars;
@@ -146,6 +149,7 @@ function gUpdate(){
         
     chart.selectAll('g')
         .data(calcs)
+        .transition()
         .selectAll(".mean")
         .attr("x1", function(d){
             return x(d.graph.line);

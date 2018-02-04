@@ -140,6 +140,13 @@ Vue.component('range-text', {
     }
 });
 
+var graphs_sort=new Vue({
+    el:"#sort",
+    data: {
+        sort:0
+    }
+});
+
 // data.params内に指定したオブジェクトを変数、htmlでのやり取りを双方向に反映する
 // またComputedで常にダメージ計算までする
 var dmg_calc = new Vue({

@@ -21,7 +21,14 @@
     <div id="wrap">
         <div id="graphs">
             <section class="form-horizontal">
-                <h3 class="bg-gray">GRAPHS</h3>
+                <div id="sort" class="form-group bg-gray">
+                    <h3 class="col-6">GRAPHS</h3>
+                    <div class="col-2" v-for="(s,index) in ['入力順','MEAN順','MAX順']">
+                        <label class="btn btn-lg wh100" style="padding-left:0;padding-right:0;" :class="[ index==sort ? 'btn-primary' : '' ]">
+                            <input type="radio" :value="index" v-model="sort">{{ s }}
+                        </label>
+                    </div>
+                </div>
                 <div class="form-group">
                     <div class="col-1">
                         <div style="position: relative;width: 1200%;z-index: -1;">
