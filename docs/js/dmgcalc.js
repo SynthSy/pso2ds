@@ -146,7 +146,16 @@ var dmg_calc = new Vue({
     el: '#params',
     data: {
         params:current_params,
-        version:v
+        version:v,
+        toggle:{
+            settings:false,
+            pleyer:false,
+            weapon:false,
+            equips:false,
+            enemy:false,
+            paany:false,
+            skills:false
+        }
     },
     computed: {
         // 攻撃属性の変換
@@ -210,7 +219,7 @@ var dmg_calc = new Vue({
         // 表示用サマリー(スキル)
         summary_s : function(){
             var skillef=this.summary_s_skills;
-            return ["倍率×"+skillef.r.toFixed(2),"クリティカル倍率×"+skillef.cr.toFixed(2),"\r\nステ＋"+skillef.st.toFixed(2)].join(' ');
+            return ["倍率×"+skillef.r.toFixed(2),"クリティカル倍率×"+skillef.cr.toFixed(2),"\r\nステ＋"+skillef.st].join(' ');
         },
         summary_s_skills : function(){
             var ef = {r:1,cr:1,st:0};
