@@ -27,7 +27,7 @@ function gAppend(){
         .attr('id', function(d) {
             return d.settings.dmgid;
         })
-        .attr('class',"bars")
+        .attr('class',"bar")
         .on('click', function (d,i) {
             var dmgid=d.settings.dmgid;
             pSelect(dmgid);
@@ -70,8 +70,10 @@ function gAppend(){
     var desc_g=desc.selectAll("g")
         .data(calcs)
         .enter().append("g")
-        .attr('height', barHeight)
-        .attr('width', "100%")
+        .attr('transform', function(d, i) {
+            return 'translate(0,' + i * barHeight + ')';
+        })
+        .attr('class',"txt")
         .on('click', function (d,i) {
             pSelect(d.settings.dmgid);
         });
@@ -80,17 +82,12 @@ function gAppend(){
     desc_g.append("rect")
         .attr("width",parentLength)
         .attr("height",barHeight)
-        .attr("y",function(d,i){
-            return i * barHeight;
-        })
         .attr("class","gselect");
         
     desc_g.append("text")
         .attr("width",parentLength)
         .attr("height",barHeight)
-        .attr("y",function(d,i){
-            return i * barHeight+13;
-        })
+        .attr("y",13)
         .attr("class","gdesc");
     gUpdate();
 }
@@ -188,3 +185,35 @@ function gUpdate(){
         });
 }
 
+function gOrder(mode){
+    var s={};
+    switch (mode) {
+        case 0 :
+            s = function(a,b){return d3.ascending(a.settings.dmgid, b.settings.dmgid);};
+            break;
+        case 1 :
+            s = function(a,b){return d3.descending(a.graph.line, b.graph.line);};
+            break;
+        case 2 :
+            s = function(a,b){return d3.descending(a.graph.bars[1], b.graph.bars[1]);};
+            break;
+    }
+    var chart = d3.select('.chart');
+    var desc = d3.select('.desc');
+    
+    calcs.sort(s);
+    chart.selectAll(".bar").sort(s);
+    desc.selectAll(".txt").sort(s);
+
+    var transition = chart.transition().duration(750);
+    var transition1 = desc.transition().duration(750);
+
+    transition.selectAll("g")
+        .attr('transform', function(d, i) {
+            return 'translate(0,' + i * barHeight + ')';
+        });
+    transition1.selectAll("g")
+        .attr('transform', function(d, i) {
+            return 'translate(0,' + i * barHeight + ')';
+        });
+}

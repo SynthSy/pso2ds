@@ -25,7 +25,7 @@
                     <h3 class="col-6">GRAPHS</h3>
                     <div class="col-2" v-for="(s,index) in ['入力順','MEAN順','MAX順']">
                         <label class="btn btn-lg wh100" style="padding-left:0;padding-right:0;" :class="[ index==sort ? 'btn-primary' : '' ]">
-                            <input type="radio" :value="index" v-model="sort">{{ s }}
+                            <input type="radio" :value="index" v-model="sort" v-on:change="gOrder(sort)">{{ s }}
                         </label>
                     </div>
                 </div>
