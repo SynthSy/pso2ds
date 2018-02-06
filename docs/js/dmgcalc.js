@@ -303,8 +303,21 @@ var dmg_calc = new Vue({
         },
         // 武器最小ダメージ
         dmg_wmin:function(){
-            // ほぼ☆１３の世界なので他の計算は却下
-            return this.dmg_wmax*0.9;
+            // ペット以外はほぼ☆１３の世界なので他の計算はとりあえずなし
+            if (this.params.settings.atktype!==2)
+                return this.dmg_wmax*0.9;
+            else {
+                // 武器90%と武器10%
+                var upperlimit = this.dmg_wmax*0.9;
+                var lowerlimit = this.dmg_wmax*0.1;
+                // ペット技量補正
+                var w_dexadjust=-50;
+                // 保証値計算
+                var safety=(Number(this.params.player.dex)*Number(this.params.others.padex)/100-Number(this.params.enemy.dex)+w_dexadjust)*2*this._r;
+                
+                // 最小ダメージは武器90%以下武器10%以上
+                return Math.max(lowerlimit,Math.min(upperlimit,safety));
+            }
             /*
             // 武器90%と武器10%
             var upperlimit = this.wmax*0.9;
