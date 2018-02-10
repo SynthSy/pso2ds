@@ -91,7 +91,7 @@ function pSelect(dmgid){
 }
 
 // html記述を簡略化するためにcomponentを使う
-// 親側でv-modelを記述する
+// range-text   親側でv-modelを記述する
 Vue.component('range-text', {
     props: {
         "name":String,
@@ -139,9 +139,72 @@ Vue.component('range-text', {
         }
     }
 });
+// header-toggle   ヘッダーとトグルの合わせ
+Vue.component('header-toggle', {
+    props: {
+        "name":String,
+        "summary":String
+    },
+    template: '\
+        <div class="form-group bg-gray">\
+            <h3 class="col-6">{{ name }}</h3>\
+            <h6 class="col-5" style="white-space: pre;">{{ summary }}</h6>\
+            <div class="col-1">\
+                <label class="btn btn-primary wh100">\
+                    <slot></slot>\
+                </label>\
+            </div>\
+        </div>'
+});
+// version   バージョン表記など
+Vue.component('version', {
+    props: {
+        "history":Array
+    },
+    template: '\
+        <div id="popup">\
+            <button class="btn" style="display:block;margin:0 0 0 auto;" id="close">×</button>\
+            <div class="form-horizontal">\
+                <div class="form-group">\
+                    <h4 class="col-9">このシミュについて{{ "ver." + history[0].ver.toFixed(2) }}</h4>\
+                    <div class="col-3">\
+                        作者:<a href="https://twitter.com/usousuke" target="_blank">@usousuke</a>\
+                    </div>\
+                </div>\
+            </div>\
+            <p>\
+                <a href="https://twitter.com/6elz" target="_blank">@6elz</a>氏の<a href="http://4rt.info/psod/">http://4rt.info/psod/</a>を参考に作成しました。<br>\
+                改めて@6elz氏お礼申し上げます。私個人の勉強という側面が大きいのですが、公開の許可を頂けて非常に感謝しております。\
+            </p>\
+            <h4>コンセプト</h4>\
+            <p>\
+                自分がpso2を辞めたときのためにできるだけ単純に作りました。<br>\
+                単純な倍率系が増えたくらいでは変更しなくてもいいくらいに作っています。<br>\
+            </p>\
+            <h4>個人的な改良点</h4>\
+            <p>\
+                <strong>クリティカル時の倍率上昇系をいじれるようにしています。</strong>これをしたかったのがほとんどです。<br>\
+                倍率系の存在場所が増え、任意倍率で調整するのが厳しくなってきたので<strong>武器潜在の倍率、リング倍率を任意に増やせるように</strong>しています。\
+            </p>\
+            <section class="form-horizontal">\
+                <h3 class="col-12 bg-gray">VERSION</h3>\
+                <div class="form-group" v-for="v in history">\
+                    <div class="col-2 center bg-primary">{{ "ver." + v.ver.toFixed(2)}}</div>\
+                    <div class="col-8" style="padding-left:10px;white-space: pre;">{{ v.desc }}</div>\
+                    <div class="col-2 center">{{ v.date }}</div>\
+                </div>\
+            </section>\
+        </div>'
+});
 
 var graphs_sort=new Vue({
     el:"#sort",
+    data: {
+        sort:0
+    }
+});
+var graphs_sort_g=new Vue({
+    el:"#sort-g",
     data: {
         sort:0
     }
