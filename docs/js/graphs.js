@@ -143,10 +143,10 @@ function gUpdate(){
             color[i];
         });
         
-    chart.selectAll('g')
+    chart.selectAll('.mean')
         .data(calcs)
         .transition()
-        .selectAll(".mean")
+        //.selectAll(".mean")
         .attr("x1", function(d){
             return x(d.graph.line);
         })
@@ -154,9 +154,9 @@ function gUpdate(){
             return x(d.graph.line);
         })
 
-    chart.selectAll('g')
+    chart.selectAll('.dmg')
         .data(calcs)
-        .selectAll(".dmg")
+//        .selectAll(".dmg")
         .attr('width', "100%")
         .text(function(d){
             return ["max "+d.graph.bars[1],"min "+d.graph.bars[0],"mean "+d.graph.line].join(" ");

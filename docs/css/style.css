@@ -16,6 +16,7 @@ input[type="text"]{
 }
 .center{
     text-align: center;
+    padding-top: .4em;
 }
 .right{
     text-align: right;

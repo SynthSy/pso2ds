@@ -9,8 +9,7 @@ var init_params = {
     player:{
         atk:1500,
         dex:600,
-        critical:5,
-        breakSD:1.0
+        critical:5
     },
     weapon:{
         atk:1000,
@@ -18,8 +17,7 @@ var init_params = {
         op:0,
         potentials:[
             {critical:false,rate:0}
-        ],
-        wondlovers:{rate:0,m_atk:0}
+        ]
     },
     equips:{
         unitsop:0,
@@ -37,7 +35,14 @@ var init_params = {
         any_r:0,
         pa:100,
         padex:100,
-        skills:{nz:1}
+        skills:{nz:1},
+        elconv:0,
+        wondreacter:{skill:0,m_atk:0},
+        baseselect:[],
+        buffbase:0,
+        buffs:[
+            {rate:1.0,base:0}
+        ]
     },
     graph: {
         bars : [564,585],
@@ -66,11 +71,14 @@ pAdd();
 function pInit(){
     var dmgid = current_params.settings.dmgid;
     current_params=$.extend(true,{},init_params);
+    current_params.settings.dmgid=dmgid;
     dmg_calc.params=current_params;
     
-    var idx = calcs.findIndex(function(d){d.settings.dmgid==dmgid;});
+    var idx = calcs.findIndex(function(d){
+        return d.settings.dmgid==dmgid;
+    });
     
-    calcs[idx]=current_params;
+    calcs.splice(idx,1,current_params);
 }
 
 function pSelect(dmgid){
@@ -166,7 +174,7 @@ Vue.component('version', {
             <button class="btn" style="display:block;margin:0 0 0 auto;" id="close">×</button>\
             <div class="form-horizontal">\
                 <div class="form-group">\
-                    <h4 class="col-9">このシミュについて{{ "ver." + history[0].ver.toFixed(2) }}</h4>\
+                    <h4 class="col-9">このシミュについて</h4>\
                     <div class="col-3">\
                         作者:<a href="https://twitter.com/usousuke" target="_blank">@usousuke</a>\
                     </div>\
@@ -190,7 +198,7 @@ Vue.component('version', {
                 <h3 class="col-12 bg-gray">VERSION</h3>\
                 <div class="form-group" v-for="v in history">\
                     <div class="col-2 center bg-primary">{{ "ver." + v.ver.toFixed(2)}}</div>\
-                    <div class="col-8" style="padding-left:10px;white-space: pre;">{{ v.desc }}</div>\
+                    <div style="padding-left:10px;white-space: pre;flex:1;">{{ v.desc }}</div>\
                     <div class="col-2 center">{{ v.date }}</div>\
                 </div>\
             </section>\
@@ -224,6 +232,7 @@ var dmg_calc = new Vue({
             equips:false,
             enemy:false,
             paany:false,
+            buff:false,
             skills:false
         }
     },
@@ -279,7 +288,7 @@ var dmg_calc = new Vue({
         },
         // 表示用サマリー(エネミー)
         summary_e : function(){
-            return ['防御力 '+this.params.enemy.def,'技量 '+this.params.enemy.dex,'\r\n部位倍率× '+this.params.enemy.partrate.toFixed(2),'属性倍率×'+this.params.enemy.elmrate.toFixed(2)].join(' ')
+            return ['防御力 '+this.params.enemy.def,'技量 '+this.params.enemy.dex,'\r\n部位倍率× '+Number(this.params.enemy.partrate).toFixed(2),'属性倍率×'+Number(this.params.enemy.elmrate).toFixed(2)].join(' ')
         },
         // 表示用サマリー(PA任意倍率)
         summary_pa : function(){
@@ -290,6 +299,14 @@ var dmg_calc = new Vue({
         summary_s : function(){
             var skillef=this.summary_s_skills;
             return ["倍率×"+skillef.r.toFixed(2),"クリティカル倍率×"+skillef.cr.toFixed(2),"\r\nステ＋"+skillef.st].join(' ');
+        },
+        // 表示用サマリー(バフ)
+        summary_b : function(){
+            var summary=[];
+            for (var i=0;i<this.params.others.buffs.length;i++){
+                summary.push('+'+((Number(this.params.others.buffs[i].rate)-1)*Number(this.params.others.buffs[i].base)).toFixed(2));
+            }
+            return summary.join(' ');
         },
         summary_s_skills : function(){
             var ef = {r:1,cr:1,st:0};
@@ -321,6 +338,14 @@ var dmg_calc = new Vue({
             r *= Number(this.params.others.pa)/100
             r *= (100+Number(this.params.others.any_r))/100;
             
+            // テクとエレメントコンバージョン
+            if (this.params.settings.atktype==3) {
+                r *= this.params.enemy.elmrate;
+                if (this.params.others.elconv>0) {
+                    r *= (100+Number(this.params.weapon.elm)*0.5)/100
+                }
+            }
+            
             return r;
         },
         // クリティカル倍率
@@ -339,10 +364,23 @@ var dmg_calc = new Vue({
         },
         // ステ合計
         _atk:function(){
+            var b = 0;
+            for (var i=0;i<this.params.others.buffs.length;i++){
+                b+=((Number(this.params.others.buffs[i].rate)-1)*Number(this.params.others.buffs[i].base)).toFixed(2);
+            }
+            
             return Number(this.params.player.atk)
                 +Number(this.params.weapon.op)
                 +Number(this.params.equips.unitsop)
-                +Number(this.summary_s_skills.st);
+                +Number(this.summary_s_skills.st)
+                +Number(b);
+        },
+        // ウォンドリアクター込みの武器攻撃力
+        _watk:function(){
+            if ((this.params.settings.atktype==0) && (this.params.others.wondreacter.skill>0)){
+                return Number(this.params.weapon.atk)+Number((Number(this.params.others.wondreacter.m_atk)*0.4).toFixed(2));
+            } else
+                return this.params.weapon.atk;
         },
         // 素手ダメージ
         dmg_bare:function(){
@@ -358,11 +396,11 @@ var dmg_calc = new Vue({
             if (this.params.settings.atktype==3)
                 return 0;
             else
-                return this.params.weapon.atk*this.params.weapon.elm*0.01*this.params.enemy.elmrate*this._r;
+                return this._watk*this.params.weapon.elm*0.01*this.params.enemy.elmrate*this._r;
         },
         // 武器最大ダメージ
         dmg_wmax:function(){
-            return this.params.weapon.atk*this.params.enemy.partrate*this._r;
+            return this._watk*this.params.enemy.partrate*this._r;
         },
         // 武器最小ダメージ
         dmg_wmin:function(){
@@ -468,6 +506,32 @@ var dmg_calc = new Vue({
                     this.$set(this.params.others.skills,cs[i].id,cs[i]["default"]);
                 }
                 $('#wrap').animate({scrollTop: $('#wrap')[0].scrollHeight}, 'slow');
+            }
+            return 0;
+        },
+        baseReset:function(){
+            this.params.others.buffs.splice(0,this.params.others.buffs.length);
+            this.params.others.buffs.push({rate:1.0,base:this.params.others.buffbase});
+        },
+        baseSelected:function(){
+            var b=0;
+            
+            for (var i=0;i<this.params.others.baseselect.length;i++){
+                switch (this.params.others.baseselect[i]){
+                    case 1:
+                        b+=Number(this.params.player.atk);
+                        break;
+                    case 2:
+                        b+=Number(this.params.weapon.op);
+                        break;
+                    case 3:
+                        b+=Number(this.params.equips.unitsop);
+                        break;
+                }
+            }
+            this.params.others.buffbase=b;
+            if ((this.params.others.buffs.length==1) && (this.params.others.buffs[0].base==0)){
+                this.params.others.buffs[0].base=b;
             }
             return 0;
         }

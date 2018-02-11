@@ -75,7 +75,7 @@
                     <h3 class="col-6">PSO2ダメージ計算機</h3>
                     <h6 class="col-4" style="white-space: pre;"></h6>
                     <div class="col-2">
-                        <button id="version" class="btn btn-lg wh100" style="padding:0;">？</button>
+                        <button id="version" class="btn btn-lg wh100" style="padding:0;">{{ "ver." + version_r[0].ver.toFixed(2) }}</button>
                     </div>
                 </div>
             </section>
@@ -99,7 +99,7 @@
                         <input class="form-input input-lg left" type="text" style="display:none" v-model="params.settings.calcid">
                     </div>  
                     <div class="col-2">
-                        <label class="form-label input-lg center">ｸﾞﾙｰﾌﾟ</label>
+                        <label class="form-label input-lg center">グループ</label>
                     </div>
                     <div class="col-2">
                         <input class="form-input input-lg left" type="text" v-model.lazy="params.settings.group">
@@ -110,6 +110,7 @@
                         </label>
                     </div>
                     <div class="col-4">
+                        <div class="center">↑空白区切りで複数指定可</div>
                     </div>
                 </div>
             </section>
@@ -184,25 +185,85 @@
                     <input type="checkbox" v-model="toggle.paany">
                 </header-toggle>
                 <div v-if="!toggle.paany" class="form-group">
-                    <div class="col-2 center" style="padding-top:.4em;">
+                    <div class="col-2 center">
                         PA倍率
                     </div>
                     <div class="col-2 center">
                         <input class="form-input input-lg right" type="text" v-model.lazy="params.others.pa">
                     </div>
-                    <div class="col-2 center" style="padding-top:.4em;">
+                    <div class="col-2 center">
                         PA技量補正
                     </div>
                     <div class="col-2 center">
                         <input class="form-input input-lg right" type="text" v-model.lazy="params.others.padex">
                     </div>
-                    <div class="col-2 center" style="padding-top:.4em;">
+                    <div class="col-2 center">
                         任意倍率
                     </div>
                     <div class="col-2 center">
                         <input class="form-input input-lg right" type="text" v-model.lazy="params.others.any_r">
                     </div>
                 </div>
+            </section>
+            <section id="buff" class="form-horizontal">
+                <header-toggle name="BUFF" :summary="summary_b">
+                    <i class="icon" v-bind:class="(toggle.buff ? 'icon-plus' : 'icon-minus')"></i>
+                    <input type="checkbox" v-model="toggle.buff">
+                </header-toggle>
+                <template v-if="!toggle.buff">
+                    <div class="form-group">
+                        <h5 class="col-5">
+                            基礎値
+                        </h5>
+                        <h6 class="col-7">
+                            プレイヤー{{ params.player.atk }}、武器OP{{ params.weapon.op }}、ユニットOP{{ params.equips.unitsop }}<br>
+                            シフタ(1.197)、シフタアドバンス(1.05~)、カタナギア(1.3)
+                        </h6>
+                        <div class="col-2 center">
+                            <label class="btn btn-lg wh100" style="padding-left:0;padding-right:0;" :class="[ params.others.baseselect.indexOf(1)>-1 ? 'btn-primary' : '' ]">
+                                <input type="checkbox" :value="1" v-model="params.others.baseselect" v-on:change="baseSelected">+ﾌﾟﾚｲﾔｰ
+                            </label>
+                            
+                        </div>
+                        <div class="col-2 center">
+                            <label class="btn btn-lg wh100" style="padding-left:0;padding-right:0;" :class="[ params.others.baseselect.indexOf(2)>-1 ? 'btn-primary' : '' ]">
+                                <input type="checkbox" :value="2" v-model="params.others.baseselect" v-on:change="baseSelected">+武器OP
+                            </label>
+                        </div>
+                        <div class="col-2 center">
+                            <label class="btn btn-lg wh100" style="padding-left:0;padding-right:0;" :class="[ params.others.baseselect.indexOf(3)>-1 ? 'btn-primary' : '' ]">
+                                <input type="checkbox" :value="3" v-model="params.others.baseselect" v-on:change="baseSelected">+ﾕﾆｯﾄOP
+                            </label>
+                        </div>
+                        <div class="col-2 center">
+                        </div>
+                        <div class="col-2 center">
+                            <input class="form-input input-lg right" type="text" v-model.lazy="params.others.buffbase">
+                        </div>
+                        <div class="col-2 center">
+                            <label class="btn btn-error btn-lg wh100" style="padding-left:0;padding-right:0;" v-on:click="baseReset">
+                                リセット
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <h5 class="col-5">
+                            倍率系
+                        </h5>
+                        <h6 class="col-7">
+                            シフドリ(小:1.05、中:1.1、大:1.2)、チームツリー(1.05~1.20)<br>
+                            シフタ(1.197)、シフタアドバンス(1.05~)、カタナギア(1.3)
+                        </h6>
+                    </div>
+                    <range-text v-for="(val,index) in params.others.buffs" :key="index" 
+                            @addarray="params.others.buffs.push({rate:1.0,base:params.others.buffbase})" 
+                            @removearray="params.others.buffs.splice(index, 1)" :arrid="index" 
+                            :name="'バフ倍率 '+(index+1)" :max="1.3" :min="1.0" :step="0.001" :rateswitch="true" v-model="params.others.buffs[index].rate">
+                                <div class="col-2">
+                                    <input class="form-input input-lg right" type="text" v-model.lazy="params.others.buffs[index].base">
+                                </div>
+                            </range-text>
+                </template>
             </section>
             <section id="skills" class="form-horizontal">
                 <header-toggle name="COMMON & CLASS SKILLS" :summary="summary_s">
@@ -219,8 +280,52 @@
                     </div>
                     <template v-for="cls in ['Co','Hu','Fi','Ra','Gu','Fo','Te','Br','Bo','Su','Hr']">
                         <div class="classskills" v-if="hasClass(cls)">
+                            <template v-if="cls=='Fo'">
+                                <div class="form-group">
+                                    <div class="col-3 center">
+                                        ｴﾚﾒﾝﾀﾙｺﾝﾊﾞｰｼﾞｮﾝ
+                                    </div>
+                                    <div class="col-9" style="display:flex;">
+                                        <div class="skillnone">
+                                            <label class="btn btn-lg wh100 center" v-bind:class="[ params.others.elconv==0 ? 'btn-primary' : '' ]">
+                                                <input type="radio" :value="0" v-model="params.others.elconv">なし
+                                            </label>
+                                        </div>
+                                        <div class="skill">
+                                            <label class="btn btn-lg wh100 center" v-bind:class="[ params.others.elconv==1 ? 'btn-primary' : '' ]">
+                                                <input type="radio" :value="1" v-model="params.others.elconv">あり
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                            <template v-if="cls=='Te'">
+                                <div class="form-group">
+                                    <div class="col-3 center">
+                                        ウォンドリアクター
+                                    </div>
+                                    <div class="col-4" style="display:flex;">
+                                        <div class="skillnone">
+                                            <label class="btn btn-lg wh100 center" v-bind:class="[ params.others.wondreacter.skill==0 ? 'btn-primary' : '' ]">
+                                                <input type="radio" :value="0" v-model="params.others.wondreacter.skill">なし
+                                            </label>
+                                        </div>
+                                        <div class="skill">
+                                            <label class="btn btn-lg wh100 center" v-bind:class="[ params.others.wondreacter.skill==1 ? 'btn-primary' : '' ]">
+                                                <input type="radio" :value="1" v-model="params.others.wondreacter.skill">あり
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-3 center">
+                                        武器法撃力
+                                    </div>
+                                    <div class="col-2">
+                                        <input class="form-input input-lg right" type="text" v-model.lazy="params.others.wondreacter.m_atk">
+                                    </div>
+                                </div>
+                            </template>
                             <div class="form-group" v-for="skill in classSkills(cls)">
-                                <div class="col-3 center" style="padding-top:.4em;">
+                                <div class="col-3 center">
                                     {{ skill.skillName }}
                                 </div>
                                 <div class="col-9" style="display:flex;">
