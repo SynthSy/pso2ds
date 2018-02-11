@@ -38,7 +38,7 @@ var init_params = {
         skills:{nz:1},
         elconv:0,
         wondreacter:{skill:0,m_atk:0},
-        baseselect:[],
+        baseselect:[4],
         buffbase:0,
         buffs:[
             {rate:1.0,base:0}
@@ -138,6 +138,8 @@ Vue.component('range-text', {
     methods:{
         updateValue:function(e){
             this.$emit('input',e.target.value);
+            if (this.name.match(/バフ/))
+                this.$emit('newbase');
         },
         add:function(){
             this.$emit('addarray');
@@ -366,7 +368,7 @@ var dmg_calc = new Vue({
         _atk:function(){
             var b = 0;
             for (var i=0;i<this.params.others.buffs.length;i++){
-                b+=((Number(this.params.others.buffs[i].rate)-1)*Number(this.params.others.buffs[i].base)).toFixed(2);
+                b+=Number(((Number(this.params.others.buffs[i].rate)-1)*Number(this.params.others.buffs[i].base)).toFixed(2));
             }
             
             return Number(this.params.player.atk)
@@ -526,6 +528,11 @@ var dmg_calc = new Vue({
                         break;
                     case 3:
                         b+=Number(this.params.equips.unitsop);
+                        break;
+                    case 4:
+                        for (var j=0;j<this.params.others.buffs.length;j++){
+                            b+=Number(((Number(this.params.others.buffs[j].rate)-1)*Number(this.params.others.buffs[j].base)).toFixed(2));
+                        }
                         break;
                 }
             }
