@@ -199,17 +199,18 @@ Vue.component('version', {
             </div>\
             <p>\
                 <a href="https://twitter.com/6elz" target="_blank">@6elz</a>氏の<a href="http://4rt.info/psod/">http://4rt.info/psod/</a>を参考に作成しました。<br>\
-                改めて@6elz氏お礼申し上げます。私個人の勉強という側面が大きいのですが、公開の許可を頂けて非常に感謝しております。\
-            </p>\
-            <h4>コンセプト</h4>\
-            <p>\
-                自分がpso2を辞めたときのためにできるだけ単純に作りました。<br>\
-                単純な倍率系が増えたくらいでは変更しなくてもいいくらいに作っています。<br>\
+                改めて@6elz氏とご関係者の方にお礼申し上げます。私個人の勉強という側面が大きいのですが、公開の許可を頂けて非常に感謝しております。<br>\
+                現在解説のようなものはないのですが必要との声が沢山あれば考えたいと思います。\
             </p>\
             <h4>個人的な改良点</h4>\
             <p>\
                 <strong>クリティカル時の倍率上昇系をいじれるようにしています。</strong>これをしたかったのがほとんどです。<br>\
                 倍率系の存在場所が増え、任意倍率で調整するのが厳しくなってきたので<strong>武器潜在の倍率、リング倍率を任意に増やせるように</strong>しています。\
+            </p>\
+            <h4>開発に使ったもの</h4>\
+            <p>\
+                <a href="https://jquery.com/" target="_blank">jQuery</a>、<a href="https://jp.vuejs.org/index.html" target="_blank">Vue.js</a>、<a href="https://d3js.org/" target="_blank">d3.js</a>、<a href="http://pso2.swiki.jp/index.php?%E3%83%80%E3%83%A1%E3%83%BC%E3%82%B8%E8%A8%88%E7%AE%97" target="_blank">PSO2 swikiダメージ計算</a>、\
+                <a href="https://twitter.com/6elz" target="_blank">@6elz</a>氏の<a href="http://4rt.info/psod/">http://4rt.info/psod/</a>\
             </p>\
             <section class="form-horizontal">\
                 <h3 class="col-12 bg-gray">VERSION</h3>\
@@ -487,6 +488,10 @@ var dmg_calc = new Vue({
             
             // ここでグラフ更新
             gUpdate();
+            // セーブURLがあると勘違いしやすいので消す
+            
+            if ($(".saveurl>input").val())
+                $(".saveurl>input").val('');
             
             return this.params.graph.line;
         },

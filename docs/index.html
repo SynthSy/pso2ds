@@ -70,7 +70,7 @@
                         <button :id="val.cmd" class="btn btn-lg wh100">{{ val.name }}</button>
                     </div>
                     <div class="col-4 saveurl">
-                        <input class="form-input input-lg left" readonly="true" type="text">
+                        <input class="form-input input-lg left" placeholder="セーブURL" readonly type="text">
                     </div>
                     <div class="col-2">
                         <label class="form-label input-lg center">説明</label>
@@ -118,7 +118,7 @@
                     <range-text v-for="(potential,index) in params.weapon.potentials" :key="index" 
                             @addarray="params.weapon.potentials.push({critical:false,rate:0})" 
                             @removearray="params.weapon.potentials.splice(index, 1)" :arrid="index" 
-                            :name="'潜在S級倍率 '+(index+1)" :max="60" :min="0" :step="1" :rateswitch="true" v-model="params.weapon.potentials[index].rate">
+                            :name="'潜在S級倍率 '+(index+1)" :max="30" :min="0" :step="1" :rateswitch="true" v-model="params.weapon.potentials[index].rate">
                         <div class="col-2">
                             <label class="label label-lg wh100 center form-switch" v-bind:class="[potential.critical ? 'label-primary' : 'label-secondary']">
                                 <input type="checkbox" v-model="potential.critical">
@@ -359,7 +359,6 @@
                 var shortUrl = response.result.id;
                 // 画面に表示
                 $(".saveurl>input").val(shortUrl);
-                $(".saveurl").show();
             });
         });
         $(document).on("click","#load",function(){
