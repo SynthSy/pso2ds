@@ -56,13 +56,14 @@ function pAdd(){
     if (calcs.length==0) {
         $.guid=0;
         calcs.push($.extend(true,{},init_params));
-        current_params=calcs[calcs.length-1];
     }else{
         calcs.push($.extend(true,{},current_params));
-        current_params=calcs[calcs.length-1];
         $.guid++;
-        dmg_calc.params=current_params;
     }
+    current_params=calcs[calcs.length-1];
+    
+    if (dmg_calc)
+        dmg_calc.params=current_params;
     current_params.settings.dmgid=$.guid;
     gAppend();
 }
@@ -79,6 +80,20 @@ function pInit(){
     });
     
     calcs.splice(idx,1,current_params);
+}
+
+function pDelete(dmgid){
+    var idx = calcs.findIndex(function(d){
+        return d.settings.dmgid==dmgid;
+    });
+    calcs.splice(idx,1);
+    
+    if (calcs.length==0)
+        pAdd();
+    else {
+        pSelect();
+        gUpdate();
+    }
 }
 
 function pSelect(dmgid){
