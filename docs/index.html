@@ -11,8 +11,7 @@
     <link rel="stylesheet" href="css/style.css">
     <script src="js/version.js"></script>
     <script src="js/skills.js"></script>
-    <script src="js/framelib/rawdeflate.js"></script>
-    <script src="js/framelib/rawinflate.js"></script>
+    <script src="js/urlshortner.js"></script>
     <script src="js/framelib/vue.min.js"></script>
     <script src="js/framelib/d3.min.js"></script>
     <script src="js/framelib/jquery.min.js" integrty="sha256-AIzaSyCVnmpEl1enwvdqddw1/GZfA4cGmEjw3d0=" crossorign="anonymous"></script>
@@ -113,7 +112,7 @@
                 </header-toggle>
                 <template v-if="!toggle.weapon">
                     <range-text name="攻撃力" :max="3000" :min="500" :step="1" v-model="params.weapon.atk"></range-text>
-                    <range-text name="OP(固定値)" :max="400" :min="0" :step="1" v-model="params.weapon.op" :statuslabel="true"></range-text>
+                    <range-text name="OP(固定値orペットプラス値)" :max="300" :min="0" :step="1" v-model="params.weapon.op" :statuslabel="true"></range-text>
                     <range-text name="属性値" :max="60" :min="0" :step="1" v-model="params.weapon.elm"></range-text>
                     <range-text v-for="(potential,index) in params.weapon.potentials" :key="index" 
                             @addarray="params.weapon.potentials.push({critical:false,rate:0})" 
@@ -134,7 +133,7 @@
                     <input type="checkbox" v-model="toggle.equips">
                 </header-toggle>
                 <template v-if="!toggle.equips">
-                    <range-text name="ユニOP&リングステ" :max="400" :min="0" :step="1" v-model="params.equips.unitsop" :statuslabel="true"></range-text>
+                    <range-text name="ユニOP&リングステ(&時限&料理等)" :max="1000" :min="0" :step="1" v-model="params.equips.unitsop" :statuslabel="true"></range-text>
                     <range-text v-for="(ring,index) in params.equips.rings" :key="index" 
                             @addarray="params.equips.rings.push({critical:false,rate:0})" 
                             @removearray="params.equips.rings.splice(index, 1)" :arrid="index" 
@@ -265,7 +264,7 @@
                         <div class="classskills" v-if="hasClass(cls)">
                             <template v-if="cls=='Fo'">
                                 <div class="form-group">
-                                    <div class="col-3 center">
+                                    <div class="col-3 center onlymain">
                                         ｴﾚﾒﾝﾀﾙｺﾝﾊﾞｰｼﾞｮﾝ
                                     </div>
                                     <div class="col-9" style="display:flex;">
@@ -308,12 +307,12 @@
                                 </div>
                             </template>
                             <div class="form-group" v-for="skill in classSkills(cls)">
-                                <div class="col-3 center">
+                                <div class="col-3 center" v-bind:class="[ (!skill.onlymain ? 0 : skill.onlymain)==-1 ? 'onlymain' : '' ]">
                                     {{ skill.skillName }}
                                 </div>
                                 <div class="col-9" style="display:flex;">
                                     <div v-for="(lbl,idx) in skill.label" v-bind:class="idx==0 ? 'skillnone' : 'skill'">
-                                        <label class="btn btn-lg wh100 center" v-bind:class="[ idx==(!params.others.skills[skill.id] ? 0 : params.others.skills[skill.id]) ? 'btn-primary' : '' ]">
+                                        <label class="btn btn-lg wh100 center" v-bind:class="[ idx==(!params.others.skills[skill.id] ? 0 : params.others.skills[skill.id]) ? 'btn-primary' : '' ,idx==(!skill.onlymain ? -1 : skill.onlymain) ? 'onlymain' : '']">
                                             <input type="radio" :value="idx" v-model="params.others.skills[skill.id]">{{ lbl }}
                                         </label>
                                     </div>
@@ -406,7 +405,7 @@
             }, 200);
         });
         
-        // 圧縮関数 (要deflate.js)
+        // 圧縮
         function deflate(val) {
             val = encodeURIComponent(val); // UTF16 → UTF8
             val = RawDeflate.deflate(val); // 圧縮
@@ -414,7 +413,7 @@
             return val;
         }
 
-        // 復号関数 (要inflate.js)
+        // 復号
         function inflate(val) {
             val = atob(val); // base64デコード
             val = RawDeflate.inflate(val); // 復号
@@ -450,6 +449,5 @@
             }
         });
     </script>
-    <script src="js/urlshortner.js"></script>
 </body>
 </html>

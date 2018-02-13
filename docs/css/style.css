@@ -95,6 +95,9 @@ body,html{
 #skills .classskills>.form-group {
     margin-top:.4em;
 }
+#skills .onlymain{
+    color:#f00;
+}
 #tab-Co{
     pointer-events: none;
 }
