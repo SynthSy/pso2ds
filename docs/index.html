@@ -75,14 +75,14 @@
                         <label class="form-label input-lg center">説明</label>
                     </div>
                     <div class="col-6">
-                        <input class="form-input" placeholder="説明" v-model.lazy="params.settings.desc">
+                        <input id="desc" class="form-input" placeholder="説明" v-model.lazy="params.settings.desc">
                         <input class="form-input input-lg left" type="text" style="display:none" v-model="params.settings.calcid">
                     </div>  
                     <div class="col-2">
                         <label class="form-label input-lg center">グループ</label>
                     </div>
                     <div class="col-2">
-                        <input class="form-input input-lg left" type="text" v-model.lazy="params.settings.group">
+                        <input id="group" class="form-input input-lg left" type="text" v-model.lazy="params.settings.group">
                     </div>
                     <div class="col-2" v-for="(atktype,key) in ['打撃','射撃','ペット','テク']">
                         <label class="btn btn-lg wh100" style="padding-left:0;padding-right:0;" :class="[ key==params.settings.atktype ? 'btn-primary' : '' ]">
@@ -162,7 +162,7 @@
             <section id="pa" class="form-horizontal">
                 <header-toggle name="PA & 任意倍率" :summary="summary_pa">
                     <i class="icon" v-bind:class="(toggle.paany ? 'icon-plus' : 'icon-minus')"></i>
-                    <input type="checkbox" v-model="toggle.paany">
+                    <input type="checkbox" v-model.number="toggle.paany">
                 </header-toggle>
                 <div v-if="!toggle.paany" class="form-group">
                     <div class="col-2 center">

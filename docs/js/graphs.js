@@ -150,10 +150,16 @@ function gUpdate(){
         .transition()
         //.selectAll(".mean")
         .attr("x1", function(d){
-            return x(d.graph.line);
+            if (isNaN(d.graph.line))
+                return 0;
+            else
+                return x(d.graph.line);
         })
         .attr("x2", function(d){
-            return x(d.graph.line);
+            if (isNaN(d.graph.line))
+                return 0;
+            else
+                return x(d.graph.line);
         })
 
     chart.selectAll('.dmg')
