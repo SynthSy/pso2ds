@@ -315,10 +315,7 @@ function groupCreate(){
         .text(function(d){
             return d.desc;
         });
-    chart_g.selectAll(".gname")
-        .data(gcalcs)
-        .enter().append("text")
-        .attr("class",'gname')
+    chart_g.append("text")
         .attr("x",-1*m_left)
         .attr("y",13)
         .text(function(d){

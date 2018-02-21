@@ -371,6 +371,7 @@
                     
                     // json文字列復元
                     try {
+                        var g="";
                         var j = JSON.parse(inflate(p));
                         
                         alert("URLからグラフをロードします。");
@@ -381,12 +382,16 @@
                         }
                         
                         for (var i=0;i<j.length;i++){
-                            $.guid++
+                            $.guid++;
                             j[i].settings.dmgid=$.guid;
                             calcs.push(j[i]);
+                            g+=j[i].settings.group;
                         }
                         gAppend();
                         pSelect($.guid);
+                        
+                        if (g.length>0)
+                            groupCreate();
                     }
                     catch (ex) {
                         alert("urlが不正です。");
@@ -429,6 +434,7 @@
                 var p=location.search.substring(3);
                 // json文字列復元
                 try {
+                    var g="";
                     var j = JSON.parse(inflate(p));
                     
                     alert("URLからグラフをロードします。");
@@ -436,12 +442,15 @@
                     calcs=[];
                     d3.select('.chart').selectAll("g").remove();
                     for (var i=0;i<j.length;i++){
-                        $.guid++
+                        $.guid++;
                         j[i].settings.dmgid=$.guid;
                         calcs.push(j[i]);
+                        g+=j[i].settings.group;
                     }
                     pSelect();
                     gAppend();
+                    if (g.length>0)
+                        groupCreate();
                 }
                 catch (ex) {
                     alert("urlが不正です。");
