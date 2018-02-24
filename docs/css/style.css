@@ -144,6 +144,8 @@ body,html{
         position: fixed;
         left:600px;
         right:20px;
+        overflow-y: scroll;
+        height: 100vh;
     }
     #params{
         width:100%;

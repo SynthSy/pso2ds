@@ -363,14 +363,14 @@ function groupCreate(){
         .attr("y",10)
         .html(function(d){
             return '<tspan>'+d.name+'</tspan>'
-                +(p_base_g>0 ? "<tspan x='-70' y='40' style='fill:#5755d9;font-size:14px;'>"+(d3.sum(d.values,function(e){
+                +(p_base_g>0 ? "<tspan x='-70' y='35' style='fill:#5755d9;font-size:14px;'>"+(d3.sum(d.values,function(e){
                 return e.line;
             })/p_base_g*100).toFixed(2)+'%</tspan>':'');
         });
     chart_g.append("text")
         .attr("fill","#5755d9")
         .attr("text-anchor","end")
-        .attr("x",width-100)
+        .attr("x",width-140)
         .attr("y",10)
         .text(function(d){
             return 'sum '+d3.sum(d.values,function(e){
@@ -380,7 +380,7 @@ function groupCreate(){
     chart_g.append("svg:image")
         .attr('xlink:href','css/p-icon.svg')
         .attr('y',9)
-        .attr('x',width-100)
+        .attr('x',width-140)
         .attr('width',"32px")
         .attr('height','32px')
         .attr("class", "p-icon")
