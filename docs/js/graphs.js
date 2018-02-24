@@ -13,6 +13,8 @@ axis.append("g")
 var axisg = d3.select('.axis-g')
     .attr('width', "100%")
     .attr('height', barHeight);
+var p_base=-1;
+var p_base_g=-1;
 
 // グラフの追加
 function gAppend(){
@@ -25,7 +27,7 @@ function gAppend(){
 
     var chart_g=chart.selectAll('g')
         .data(calcs)
-        .enter().append('g')
+        .enter().insert('g',".baseline")
         .attr('transform', function(d, i) {
             return 'translate(' + [left_m, i * barHeight] + ')';
         })
@@ -82,7 +84,7 @@ function gAppend(){
     chart_g.append("svg:image")
         .attr('xlink:href','css/x-icon.svg')
         .attr('y',7)
-        .attr('x',width-150)
+        .attr('x',width-140)
         .attr('width',"32px")
         .attr('height','32px')
         .attr("class", "del-icon")
@@ -90,6 +92,17 @@ function gAppend(){
             d3.event.stopPropagation();
             var dmgid=d.settings.dmgid;
             pDelete(dmgid);
+        })
+    chart_g.append("svg:image")
+        .attr('xlink:href','css/p-icon.svg')
+        .attr('y',7)
+        .attr('x',width-180)
+        .attr('width',"32px")
+        .attr('height','32px')
+        .attr("class", "p-icon")
+        .on('click',function(d){
+            p_base=d.settings.dmgid;
+            gUpdate();
         })
         
         gUpdate();
@@ -110,7 +123,22 @@ function gUpdate(){
     var chart = d3.select('.chart')
         .attr('width', "100%")
         .attr('height', (calcs.length) * barHeight);
-
+        
+    var o=calcs.find(function(v){
+        return (v.settings.dmgid==p_base);
+    });
+    
+    var base = -100;
+    if (o)
+        base=o.graph.line;
+    
+    chart.select(".baseline")
+        .style("stroke", "red")
+        .style("stroke-width", 3)
+        .attr("x1",(base<0 ? base : x(base)+left_m))
+        .attr("x2",(base<0 ? base : x(base)+left_m))
+        .attr("y1", 0)
+        .attr("y2", (calcs.length) * barHeight);
     chart.selectAll('g')
         .data(calcs).exit().remove();
         
@@ -184,14 +212,15 @@ function gUpdate(){
     chart.selectAll(".gdesc")
         .data(calcs)
         .attr("width",width)
-        .text(function(d){
-            return d.settings.desc;
+        .html(function(d){
+            return "<tspan>"+d.settings.desc+"</tspan>"
+                +(base>0 ? "<tspan x='-90' y='40' style='fill:#5755d9;font-size:16px;'>"+((d.graph.line/base)*100).toFixed(2)+"%</tspan>" : '');
         });
     chart.selectAll(".del-icon")
-        .attr('x',width-150)
-        .text(function(d){
-            return d.settings.desc;
-        });
+        .attr('x',width-140);
+    chart.selectAll(".p-icon")
+        .attr('x',width-180);
+    
 }
 
 function gOrder(mode){
@@ -265,10 +294,18 @@ function groupCreate(){
         .attr('width', "100%")
         .attr('height', (gcalcs.length) * barHeight);
     
+    chart.select(".baseline-g")
+        .style("stroke", "red")
+        .style("stroke-width", 3)
+        .attr("x1",(p_base_g>0 ? x(p_base_g)+m_left : -1000))
+        .attr("x2",(p_base_g>0 ? x(p_base_g)+m_left : -1000))
+        .attr("y1", 0)
+        .attr("y2", (gcalcs.length) * barHeight);
+        
     chart.selectAll("g").remove();
     var chart_g=chart.selectAll('g')
         .data(gcalcs)
-        .enter().append('g')
+        .enter().insert('g',".baseline-g")
         .attr('transform', function(d, i) {
             return 'translate(' + [m_left,i * barHeight] + ')';
         })
@@ -323,10 +360,37 @@ function groupCreate(){
         });
     chart_g.append("text")
         .attr("x",-1*m_left)
-        .attr("y",13)
-        .text(function(d){
-            return d.name;
+        .attr("y",10)
+        .html(function(d){
+            return '<tspan>'+d.name+'</tspan>'
+                +(p_base_g>0 ? "<tspan x='-70' y='40' style='fill:#5755d9;font-size:14px;'>"+(d3.sum(d.values,function(e){
+                return e.line;
+            })/p_base_g*100).toFixed(2)+'%</tspan>':'');
         });
+    chart_g.append("text")
+        .attr("fill","#5755d9")
+        .attr("text-anchor","end")
+        .attr("x",width-100)
+        .attr("y",10)
+        .text(function(d){
+            return 'sum '+d3.sum(d.values,function(e){
+                return e.line;
+            });
+        });
+    chart_g.append("svg:image")
+        .attr('xlink:href','css/p-icon.svg')
+        .attr('y',9)
+        .attr('x',width-100)
+        .attr('width',"32px")
+        .attr('height','32px')
+        .attr("class", "p-icon")
+        .on('click',function(d){
+            p_base_g=d3.sum(d.values,function(e){
+                return e.line;
+            });
+            groupCreate();
+        });
+    
         
     axis.select("g").remove()
     axis.append("g")

@@ -209,8 +209,12 @@ Vue.component('version', {
             </p>\
             <h4>開発に使ったもの</h4>\
             <p>\
-                <a href="https://jquery.com/" target="_blank">jQuery</a>、<a href="https://jp.vuejs.org/index.html" target="_blank">Vue.js</a>、<a href="https://d3js.org/" target="_blank">d3.js</a>、<a href="http://pso2.swiki.jp/index.php?%E3%83%80%E3%83%A1%E3%83%BC%E3%82%B8%E8%A8%88%E7%AE%97" target="_blank">PSO2 swikiダメージ計算</a>、\
-                <a href="https://twitter.com/6elz" target="_blank">@6elz</a>氏の<a href="http://4rt.info/psod/">http://4rt.info/psod/</a>\
+                <a href="https://jquery.com/" target="_blank">jQuery</a>\
+                、<a href="https://jp.vuejs.org/index.html" target="_blank">Vue.js</a>\
+                、<a href="https://d3js.org/" target="_blank">d3.js</a>\
+                、<a href="https://picturepan2.github.io/spectre/">spectre</a>\
+                、<a href="http://pso2.swiki.jp/index.php?%E3%83%80%E3%83%A1%E3%83%BC%E3%82%B8%E8%A8%88%E7%AE%97" target="_blank">PSO2 swikiダメージ計算</a>\
+                、<a href="https://twitter.com/6elz" target="_blank">@6elz</a>氏の<a href="http://4rt.info/psod/">http://4rt.info/psod/</a>\
             </p>\
             <section class="form-horizontal">\
                 <h3 class="col-12 bg-gray">VERSION</h3>\
@@ -226,13 +230,7 @@ Vue.component('version', {
 var graphs_sort=new Vue({
     el:"#sort",
     data: {
-        sort:0
-    }
-});
-var graphs_sort_g=new Vue({
-    el:"#sort-g",
-    data: {
-        sort:0
+        sort:0,mode:false
     }
 });
 
