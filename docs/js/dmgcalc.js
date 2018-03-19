@@ -1,4 +1,13 @@
 
+var graphs_sort=new Vue({
+    el:"#sort",
+    data: {
+        sort:0,
+        mode:0,
+        
+    }
+});
+
 var init_params = {
     settings:{
         atktype:0,
@@ -46,7 +55,9 @@ var init_params = {
     },
     graph: {
         bars : [564,585],
-        line : 575
+        line : 575,
+        frames:1,
+        usepp:0
     }
 };
 
@@ -225,13 +236,6 @@ Vue.component('version', {
                 </div>\
             </section>\
         </div>'
-});
-
-var graphs_sort=new Vue({
-    el:"#sort",
-    data: {
-        sort:0,mode:false
-    }
 });
 
 // data.params内に指定したオブジェクトを変数、htmlでのやり取りを双方向に反映する

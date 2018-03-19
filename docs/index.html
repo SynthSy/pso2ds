@@ -22,10 +22,16 @@
         <div id="graphs">
             <section class="form-horizontal">
                 <div id="sort" class="form-group bg-gray">
-                    <h3 class="col-6">GRAPHS</h3>
+                    <h3 class="col-4">GRAPHS</h3>
                     <div class="col-2">
                         <label class="btn btn-lg wh100" style="padding-left:0;padding-right:0;" v-on:click="groupCreate()">
                             グループ
+                        </label>
+                    </div>
+                    <div class="col-2">
+                        <label class="btn btn-lg wh100" style="padding-left:0;padding-right:0;">
+                            {{ mode !== 1 ? 'DPS' : 'ダメージ' }}切り替え
+                            <input type="checkbox" v-model.number="mode" :true-value="1" :false-value="0" v-on:click="gUpdate()">
                         </label>
                     </div>
                     <div class="col-2" v-for="(s,index) in ['入力順','MEAN順','MAX順']">
@@ -172,26 +178,30 @@
                     <i class="icon" v-bind:class="(toggle.paany ? 'icon-plus' : 'icon-minus')"></i>
                     <input type="checkbox" v-model.number="toggle.paany">
                 </header-toggle>
-                <div v-if="!toggle.paany" class="form-group">
-                    <div class="col-2 center">
-                        PA倍率
+                <template v-if="!toggle.paany">
+                    <div class="form-group">
+                        <div class="col-2 center">
+                            PA倍率
+                        </div>
+                        <div class="col-2 center">
+                            <input class="form-input input-lg right" type="text" v-model.lazy="params.others.pa">
+                        </div>
+                        <div class="col-2 center">
+                            PA技量補正
+                        </div>
+                        <div class="col-2 center">
+                            <input class="form-input input-lg right" type="text" v-model.lazy="params.others.padex">
+                        </div>
+                        <div class="col-2 center">
+                            任意倍率
+                        </div>
+                        <div class="col-2 center">
+                            <input class="form-input input-lg right" type="text" v-model.lazy="params.others.any_r">
+                        </div>
                     </div>
-                    <div class="col-2 center">
-                        <input class="form-input input-lg right" type="text" v-model.lazy="params.others.pa">
-                    </div>
-                    <div class="col-2 center">
-                        PA技量補正
-                    </div>
-                    <div class="col-2 center">
-                        <input class="form-input input-lg right" type="text" v-model.lazy="params.others.padex">
-                    </div>
-                    <div class="col-2 center">
-                        任意倍率
-                    </div>
-                    <div class="col-2 center">
-                        <input class="form-input input-lg right" type="text" v-model.lazy="params.others.any_r">
-                    </div>
-                </div>
+                    <range-text name="フレーム数" :max="300" :min="1" :step="1" v-model="params.graph.frames"></range-text>
+                    <range-text name="PP" :max="50" :min="1" :step="1" v-model="params.graph.usepp"></range-text>
+                </template>
             </section>
             <section id="buff" class="form-horizontal">
                 <header-toggle name="BUFF" :summary="summary_b">

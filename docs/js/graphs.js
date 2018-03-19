@@ -112,9 +112,8 @@ function gAppend(){
 function gUpdate(){
     var width = $("#graphs").width();
     var left_m = 80;
-
     var max=d3.max(calcs,function(d){
-        return d.graph.bars[1]*1.3;
+        return d.graph.bars[1]*1.3 / (graphs_sort.mode == 1 ? d.graph.frames : 1);
     });
     var x = d3.scaleLinear()
         .domain([0,max])
@@ -130,7 +129,7 @@ function gUpdate(){
     
     var base = -100;
     if (o)
-        base=o.graph.line;
+        base=Math.floor(o.graph.line / (graphs_sort.mode == 1 ? o.graph.frames : 1));
     
     chart.select(".baseline")
         .style("stroke", "red")
@@ -154,14 +153,14 @@ function gUpdate(){
             // 横位置（配列にmin,cmaxの順で入っているので自分の一つ前の値をとる）
             //return x(i == 0 ? 0:this.parentNode.__data__.min);
             var arr=this.parentNode.__data__.graph.bars;
-            var val=(i==0 ? 0 : arr[i-1])
+            var val=(i==0 ? 0 : arr[i-1]) / (graphs_sort.mode == 1 ? this.parentNode.__data__.graph.frames : 1)
             return x(val);
         })
         // バーの長さ
         .attr("width",function(d,i){
             // 横幅（配列にmin,cmaxの順で入っているので差分をとる）
             var arr=this.parentNode.__data__.graph.bars;
-            var val=(i==0 ? arr[0] : arr[i]-arr[i-1])
+            var val=(i==0 ? arr[0] : (arr[i]-arr[i-1])) / (graphs_sort.mode == 1 ? this.parentNode.__data__.graph.frames : 1)
             return x(val);
         })
         .attr("fill", function(d, i){   // ここでグラフの色を設定する
@@ -181,13 +180,13 @@ function gUpdate(){
             if (isNaN(d.graph.line))
                 return 0;
             else
-                return x(d.graph.line);
+                return x(d.graph.line / (graphs_sort.mode == 1 ? d.graph.frames : 1));
         })
         .attr("x2", function(d){
             if (isNaN(d.graph.line))
                 return 0;
             else
-                return x(d.graph.line);
+                return x(d.graph.line / (graphs_sort.mode == 1 ? d.graph.frames : 1));
         })
 
     chart.selectAll('.dmg')
@@ -195,7 +194,9 @@ function gUpdate(){
 //        .selectAll(".dmg")
         .attr('width', "100%")
         .text(function(d){
-            return ["max "+d.graph.bars[1],"min "+d.graph.bars[0],"mean "+d.graph.line].join(" ");
+            return ["max "+Math.floor(d.graph.bars[1] / (graphs_sort.mode == 1 ? d.graph.frames : 1))
+                ,"min "+Math.floor(d.graph.bars[0] / (graphs_sort.mode == 1 ? d.graph.frames : 1))
+                ,"mean "+Math.floor(d.graph.line / (graphs_sort.mode == 1 ? d.graph.frames : 1))].join(" ");
         });
 
     axis.select(".dmgaxis")
@@ -214,7 +215,7 @@ function gUpdate(){
         .attr("width",width)
         .html(function(d){
             return "<tspan>"+d.settings.desc+"</tspan>"
-                +(base>0 ? "<tspan x='-90' y='40' style='fill:#5755d9;font-size:16px;'>"+((d.graph.line/base)*100).toFixed(2)+"%</tspan>" : '');
+                +(base>0 ? "<tspan x='-90' y='40' style='fill:#5755d9;font-size:16px;'>"+((Math.floor(d.graph.line / (graphs_sort.mode == 1 ? d.graph.frames : 1))/base)*100).toFixed(2)+"%</tspan>" : '');
         });
     chart.selectAll(".del-icon")
         .attr('x',width-140);
@@ -231,10 +232,10 @@ function gOrder(mode){
             s = function(a,b){return d3.ascending(a.settings.dmgid, b.settings.dmgid);};
             break;
         case 1 :
-            s = function(a,b){return d3.descending(a.graph.line, b.graph.line);};
+            s = function(a,b){return d3.descending(a.graph.line / (graphs_sort.mode == 1 ? a.graph.frames : 1), b.graph.line / (graphs_sort.mode == 1 ? b.graph.frames : 1));};
             break;
         case 2 :
-            s = function(a,b){return d3.descending(a.graph.bars[1], b.graph.bars[1]);};
+            s = function(a,b){return d3.descending(a.graph.bars[1] / (graphs_sort.mode == 1 ? a.graph.frames : 1), b.graph.bars[1] / (graphs_sort.mode == 1 ? b.graph.frames : 1));};
             break;
     }
     var chart = d3.select('.chart');
@@ -265,7 +266,7 @@ function groupCreate(){
                 if (!g.hasOwnProperty(a[j])){
                     g[a[j]]=[];
                 }
-                g[a[j]].push({desc:calcs[i].settings.desc,line:calcs[i].graph.line,dmgid:calcs[i].settings.dmgid});
+                g[a[j]].push({desc:calcs[i].settings.desc,line:calcs[i].graph.line,dmgid:calcs[i].settings.dmgid,frames:calcs[i].graph.frames});
             }
         }
     }
@@ -278,10 +279,17 @@ function groupCreate(){
     var m_left = 60;
 
     var max=d3.max(gcalcs,function(d){
+        var f=1;
+        if (graphs_sort.mode == 1){
+            f=d3.sum(d.values,function(e){
+                return e.frames;
+            });
+        }
+        
         var s=d3.sum(d.values,function(e){
             return e.line;
         });
-        return s*1.2;
+        return Math.floor(s*1.2 / f);
     });
     var x = d3.scaleLinear()
         .domain([0,max])
@@ -322,13 +330,26 @@ function groupCreate(){
         .attr("x",function(d,i){
             // 横幅（配列にmin,cmaxの順で入っているので差分をとる）
             var arr=this.parentNode.__data__.values;
+            var f=1;
+            if (graphs_sort.mode == 1){
+                f=d3.sum(arr,function(e){
+                    return e.frames;
+                });
+            }
             var val=d3.sum(arr,function(e,j){
                 return (j<i ? e.line : 0);
             });
-            return x(val);
+            return x(val / f);
         })
         .attr("width",function(d,i){
-            return x(d.line);
+            var arr=this.parentNode.__data__.values;
+            var f=1;
+            if (graphs_sort.mode == 1){
+                f=d3.sum(arr,function(e){
+                    return e.frames;
+                });
+            }
+            return x(d.line / f);
         })
         .on('click', function (d,i) {
             pSelect(d.dmgid);
@@ -347,10 +368,16 @@ function groupCreate(){
         .attr("x",function(d,i){
             // 横幅（配列にmin,cmaxの順で入っているので差分をとる）
             var arr=this.parentNode.__data__.values;
+            var f=1;
+            if (graphs_sort.mode == 1){
+                f=d3.sum(arr,function(e){
+                    return e.frames;
+                });
+            }
             var val=d3.sum(arr,function(e,j){
                 return (j<i ? e.line : 0);
             });
-            return x(val)+2;
+            return x(val / f)+2;
         })
         .on('click', function (d,i) {
             pSelect(d.dmgid);
@@ -362,10 +389,16 @@ function groupCreate(){
         .attr("x",-1*m_left)
         .attr("y",10)
         .html(function(d){
+            var f=1;
+            if (graphs_sort.mode == 1){
+                f=d3.sum(d.values,function(e){
+                    return e.frames;
+                });
+            }
             return '<tspan>'+d.name+'</tspan>'
-                +(p_base_g>0 ? "<tspan x='-70' y='35' style='fill:#5755d9;font-size:14px;'>"+(d3.sum(d.values,function(e){
+                +(p_base_g>0 ? "<tspan x='-70' y='35' style='fill:#5755d9;font-size:14px;'>"+((d3.sum(d.values,function(e){
                 return e.line;
-            })/p_base_g*100).toFixed(2)+'%</tspan>':'');
+            }) / f)/p_base_g*100).toFixed(2)+'%</tspan>':'');
         });
     chart_g.append("text")
         .attr("fill","#5755d9")
@@ -373,9 +406,15 @@ function groupCreate(){
         .attr("x",width-140)
         .attr("y",10)
         .text(function(d){
-            return 'sum '+d3.sum(d.values,function(e){
+            var f=1;
+            if (graphs_sort.mode == 1){
+                f=d3.sum(d.values,function(e){
+                    return e.frames;
+                });
+            }
+            return 'sum '+(d3.sum(d.values,function(e){
                 return e.line;
-            });
+            }) / f).toFixed(2);
         });
     chart_g.append("svg:image")
         .attr('xlink:href','css/p-icon.svg')
@@ -385,9 +424,16 @@ function groupCreate(){
         .attr('height','32px')
         .attr("class", "p-icon")
         .on('click',function(d){
-            p_base_g=d3.sum(d.values,function(e){
+            var f=1;
+            if (graphs_sort.mode == 1){
+                f=d3.sum(d.values,function(e){
+                    return e.frames;
+                });
+            }
+
+            p_base_g=Math.floor(d3.sum(d.values,function(e){
                 return e.line;
-            });
+            }) / f);
             groupCreate();
         });
     
