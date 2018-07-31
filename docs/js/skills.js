@@ -67,10 +67,10 @@ var skills=[
         className:"Co",
         skillName:"ハイレベルボーナス",
         ef:{
-            blow:[0,5,1025],
-            shot:[0,5,1025],
-            magical:[0,5,1025],
-            tech:[0,5,1025]
+            blow:[0,5,10.25],
+            shot:[0,5,10.25],
+            magical:[0,5,10.25],
+            tech:[0,5,10.25]
         },
         label:["なし","5","5+5"]
     },
