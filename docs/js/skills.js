@@ -72,7 +72,7 @@ var skills=[
             magical:[0,5,10.25],
             tech:[0,5,10.25]
         },
-        label:["なし","5","5+5"]
+        label:["なし","Lv5","Lv5+Lv5"]
     },
     {
         id:"g",
@@ -101,7 +101,7 @@ var skills=[
     {
         id:"hus",
         className:"Hu",
-        skillName:"フューリーS or ガードS",
+        skillName:"フューリーS,ガードS",
         ef:{
             blow:[0,20,32.3,38.915,45.53,50],
             shot:[0,10,21.275,27.33875,33.4025,50],
@@ -153,7 +153,7 @@ var skills=[
     {
         id:"fis",
         className:"Fi",
-        skillName:"ﾌﾞﾚｲﾌﾞS or ﾜｲｽﾞS",
+        skillName:"ﾌﾞﾚｲﾌﾞS,ﾜｲｽﾞS",
         ef:{
             blow:[0,30,35,40,54,75.5],
             shot:[0,30,35,40,54,75.5],
@@ -302,7 +302,7 @@ var skills=[
     {
         id:"ssms",
         className:"Ra",
-        skillName:"ｽﾀﾝﾃﾞｨﾝｸﾞorﾑｰﾋﾞﾝｸﾞｽﾅｲﾌﾟ",
+        skillName:"ｽﾀﾝﾃﾞｨﾝｸﾞ,ﾑｰﾋﾞﾝｸﾞｽﾅｲﾌﾟ",
         ef:{
             blow:[0,0,0,0,0],
             shot:[0,20.75,25,32.25,43.75],
@@ -468,7 +468,7 @@ var skills=[
     {
         id:"ffab",
         className:"Fo",
-        skillName:"フォトンフレアアフターバースト",
+        skillName:"ﾌｫﾄﾝﾌﾚｱｱﾌﾀｰﾊﾞｰｽﾄ",
         ef:{
             blow:["0","0"],
             shot:["0","0"],
@@ -493,7 +493,7 @@ var skills=[
     {
         id:"tjant",
         className:"Fo",
-        skillName:"ﾁｬｰｼﾞorﾉｰﾏﾙﾃｯｸｱﾄﾞﾊﾞﾝｽ",
+        skillName:"ﾁｬｰｼﾞ,ﾉｰﾏﾙﾃｯｸｱﾄﾞﾊﾞﾝｽ",
         ef:{
             blow:[0,0,0],
             shot:[0,0,0],
@@ -572,7 +572,7 @@ var skills=[
     {
         id:"brs",
         className:"Br",
-        skillName:"アベレージS or ウィークS",
+        skillName:"アベレージS,ウィークS",
         ef:{
             blow:[0,15,35],
             shot:[0,15,35],
@@ -673,7 +673,7 @@ var skills=[
     {
         id:"bos",
         className:"Bo",
-        skillName:"ｴﾚﾒﾝﾀﾙS or ﾌﾞﾚｲｸS",
+        skillName:"ｴﾚﾒﾝﾀﾙS,ﾌﾞﾚｲｸS",
         ef:{
             blow:[0,15,17.5,20,35],
             shot:[0,15,17.5,20,35],
@@ -712,7 +712,7 @@ var skills=[
     {
         id:"rpja",
         className:"Bo",
-        skillName:"ラピッドブーストJAボーナス",
+        skillName:"ﾗﾋﾟｯﾄﾞﾌﾞｰｽﾄJAﾎﾞｰﾅｽ",
         ef:{
             blow:[0,15],
             shot:[0,15],
@@ -724,7 +724,7 @@ var skills=[
     {
         id:"sea",
         className:"Bo",
-        skillName:"シフタエアアタックブースト",
+        skillName:"ｼﾌﾀｴｱｱﾀｯｸﾌﾞｰｽﾄ",
         ef:{
             blow:[0,5],
             shot:[0,5],
@@ -751,7 +751,7 @@ var skills=[
     {
         id:"pasf",
         className:"Su",
-        skillName:"ﾎﾟｲﾝﾄｱｼｽﾄ & ｻﾎﾟｰﾄﾌｧｲｱ",
+        skillName:"ﾎﾟｲﾝﾄｱｼｽﾄ,ｻﾎﾟｰﾄﾌｧｲｱ",
         ef:{
             blow:[0,10,15,26.5],
             shot:[0,10,15,26.5],
@@ -791,7 +791,7 @@ var skills=[
     {
         id:"pewh",
         className:"Su",
-        skillName:"ペットエレメントウィークヒット",
+        skillName:"ﾍﾟｯﾄｴﾚﾒﾝﾄｳｨｰｸﾋｯﾄ",
         ef:{
             blow:[0,5],
             shot:[0,5],
