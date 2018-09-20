@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-    <title>PSO2ダメージシミュレータ</title>
+    <title>PSO2 Damage Simulator (ENG)</title>
     <link rel="stylesheet" href="css/spectre.min.css">
     <link rel="stylesheet" href="css/spectre-exp.min.css">
     <link rel="stylesheet" href="css/spectre-icons.min.css">
@@ -25,16 +25,16 @@
                     <h3 class="col-4">GRAPHS</h3>
                     <div class="col-2">
                         <label class="btn btn-lg wh100" style="padding-left:0;padding-right:0;" v-on:click="groupCreate()">
-                            グループ
+                            Group
                         </label>
                     </div>
                     <div class="col-2">
                         <label class="btn btn-lg wh100" style="padding-left:0;padding-right:0;">
-                            {{ mode !== 1 ? 'DPS' : 'ダメージ' }}切り替え
+                            Switch To {{ mode !== 1 ? 'DPS' : 'Damage' }}
                             <input type="checkbox" v-model.number="mode" :true-value="1" :false-value="0" v-on:click="gUpdate()">
                         </label>
                     </div>
-                    <div class="col-2" v-for="(s,index) in ['入力順','MEAN順','MAX順']">
+                    <div class="col-2" v-for="(s,index) in ['Input Order','Sort By Mean','Sort by Max']">
                         <label class="btn btn-lg wh100" style="padding-left:0;padding-right:0;" :class="[ index==sort ? 'btn-primary' : '' ]">
                             <input type="radio" :value="index" v-model="sort" v-on:change="gOrder(sort)">{{ s }}
                         </label>
@@ -66,7 +66,7 @@
         <div id="params">
             <section id="app" class="form-horizontal">
                 <div class="form-group bg-gray">
-                    <h3 class="col-6">PSO2ダメージシミュレータ</h3>
+                    <h3 class="col-6">PSO2 Damage Simulator (ENG)</h3>
                     <h6 class="col-4" style="white-space: pre;"></h6>
                     <div class="col-2">
                         <button id="version" class="btn btn-lg wh100" style="padding:0;">{{ "ver." + version_r[0].ver.toFixed(2) }}</button>
@@ -79,32 +79,32 @@
                     <input type="checkbox" v-model="toggle.settings">
                 </header-toggle>
                 <div v-if="!toggle.settings" class="form-group">
-                    <div class="col-2" v-for="(val,index) in [{cmd:'add',name:'追加'},{cmd:'init',name:'初期値'},{cmd:'save',name:'セーブ'},{cmd:'load',name:'ロード'}]">
+                    <div class="col-2" v-for="(val,index) in [{cmd:'add',name:'Add'},{cmd:'init',name:'Reset'},{cmd:'save',name:'Save'},{cmd:'load',name:'Load'}]">
                         <button :id="val.cmd" class="btn btn-lg wh100">{{ val.name }}</button>
                     </div>
                     <div class="col-4 saveurl">
-                        <input class="form-input input-lg left" placeholder="セーブURL" readonly type="text">
+                        <input class="form-input input-lg left" placeholder="Save URL" readonly type="text">
                     </div>
                     <div class="col-2">
-                        <label class="form-label input-lg center">説明</label>
+                        <label class="form-label input-lg center">Description</label>
                     </div>
                     <div class="col-6">
                         <input id="desc" class="form-input" placeholder="説明" v-model.lazy="params.settings.desc">
                         <input class="form-input input-lg left" type="text" style="display:none" v-model="params.settings.calcid">
                     </div>  
                     <div class="col-2">
-                        <label class="form-label input-lg center">グループ</label>
+                        <label class="form-label input-lg center">Graph</label>
                     </div>
                     <div class="col-2">
                         <input id="group" class="form-input input-lg left" type="text" v-model.lazy="params.settings.group">
                     </div>
-                    <div class="col-2" v-for="(atktype,key) in ['打撃','射撃','ペット','テク']">
+                    <div class="col-2" v-for="(atktype,key) in ['Striking','Ranged','Pet','Technics']">
                         <label class="btn btn-lg wh100" style="padding-left:0;padding-right:0;" :class="[ key==params.settings.atktype ? 'btn-primary' : '' ]">
                             <input type="radio" :value="key" v-model="params.settings.atktype">{{ atktype }}
                         </label>
                     </div>
                     <div class="col-4">
-                        <div class="center">↑空白区切りで複数指定可</div>
+                        <div class="center">↑You can specify more than one by seperating them with a space.</div>
                     </div>
                 </div>
             </section>
@@ -114,9 +114,9 @@
                     <input type="checkbox" v-model="toggle.player">
                 </header-toggle>
                 <template v-if="!toggle.player">
-                    <range-text name="素手攻撃力" :max="4000" :min="500" :step="1" v-model="params.player.atk" :statuslabel="true"></range-text>
-                    <range-text name="技量" :max="1600" :min="200" :step="1" v-model="params.player.dex"></range-text>
-                    <range-text name="クリティカル率" :max="100" :min="0" :step="1" v-model="params.player.critical"></range-text>
+                    <range-text name="Base ATK Power" :max="4000" :min="500" :step="1" v-model="params.player.atk" :statuslabel="true"></range-text>
+                    <range-text name="DEX" :max="1600" :min="200" :step="1" v-model="params.player.dex"></range-text>
+                    <range-text name="Critical Rate" :max="100" :min="0" :step="1" v-model="params.player.critical"></range-text>
                 </template>
             </section>
             <section id="weapon" class="form-horizontal">
@@ -125,17 +125,17 @@
                     <input type="checkbox" v-model="toggle.weapon">
                 </header-toggle>
                 <template v-if="!toggle.weapon">
-                    <range-text name="攻撃力" :max="3000" :min="500" :step="1" v-model="params.weapon.atk"></range-text>
-                    <range-text name="OP(固定値orペットプラス値)" :max="300" :min="0" :step="1" v-model="params.weapon.op" :statuslabel="true"></range-text>
-                    <range-text name="属性値" :max="60" :min="0" :step="1" v-model="params.weapon.elm"></range-text>
+                    <range-text name="Weapon ATK" :max="3000" :min="500" :step="1" v-model="params.weapon.atk"></range-text>
+                    <range-text name="Affixes (or Pet Bonus Stats)" :max="300" :min="0" :step="1" v-model="params.weapon.op" :statuslabel="true"></range-text>
+                    <range-text name="Weapon Element" :max="60" :min="0" :step="1" v-model="params.weapon.elm"></range-text>
                     <range-text v-for="(potential,index) in params.weapon.potentials" :key="index" 
                             @addarray="params.weapon.potentials.push({critical:false,rate:0})" 
                             @removearray="params.weapon.potentials.splice(index, 1)" :arrid="index" 
-                            :name="'潜在S級倍率 '+(index+1)" :max="30" :min="0" :step="1" :rateswitch="true" v-model="params.weapon.potentials[index].rate">
+                            :name="'SSA Multipliers '+(index+1)" :max="30" :min="0" :step="1" :rateswitch="true" v-model="params.weapon.potentials[index].rate">
                         <div class="col-2">
                             <label class="label label-lg wh100 center form-switch" v-bind:class="[potential.critical ? 'label-primary' : 'label-secondary']">
                                 <input type="checkbox" v-model="potential.critical">
-                                <i class="form-icon"></i>{{potential.critical ? "C倍率" : "倍率"}}
+                                <i class="form-icon"></i>{{potential.critical ? "C. Multi" : "Multi"}}
                             </label>
                         </div>
                     </range-text>
@@ -147,15 +147,15 @@
                     <input type="checkbox" v-model="toggle.equips">
                 </header-toggle>
                 <template v-if="!toggle.equips">
-                    <range-text name="ユニOP&リングステ(&時限&料理等)" :max="1000" :min="0" :step="1" v-model="params.equips.unitsop" :statuslabel="true"></range-text>
+                    <range-text name="Unit Affix/Ring Stats/Timed/Food" :max="1000" :min="0" :step="1" v-model="params.equips.unitsop" :statuslabel="true"></range-text>
                     <range-text v-for="(ring,index) in params.equips.rings" :key="index" 
                             @addarray="params.equips.rings.push({critical:false,rate:0})" 
                             @removearray="params.equips.rings.splice(index, 1)" :arrid="index" 
-                            :name="'リング倍率 '+(index+1)" :max="20" :min="0" :step="1" :rateswitch="true" v-model="params.equips.rings[index].rate">
+                            :name="'Ring Multi '+(index+1)" :max="20" :min="0" :step="1" :rateswitch="true" v-model="params.equips.rings[index].rate">
                         <div class="col-2">
                             <label class="label label-lg wh100 center form-switch" :class="[ring.critical ? 'label-primary' : 'label-secondary']">
                                 <input type="checkbox" v-model="ring.critical">
-                                <i class="form-icon"></i>{{ring.critical ? "C倍率" : "倍率"}}
+                                <i class="form-icon"></i>{{ring.critical ? "C.Multi" : "Multi"}}
                             </label>
                         </div>
                     </range-text>
@@ -167,40 +167,40 @@
                     <input type="checkbox" v-model="toggle.enemy">
                 </header-toggle>
                 <template v-if="!toggle.enemy">
-                    <range-text name="防御力" :max="1000" :min="100" :step="1" v-model="params.enemy.def"></range-text>
-                    <range-text name="技量" :max="1000" :min="100" :step="1" v-model="params.enemy.dex"></range-text>
-                    <range-text name="部位倍率" :max="5" :min="0" :step="0.1" v-model="params.enemy.partrate"></range-text>
-                    <range-text name="属性倍率" :max="3" :min="0" :step="0.1" v-model="params.enemy.elmrate"></range-text>
+                    <range-text name="Defense" :max="1000" :min="100" :step="1" v-model="params.enemy.def"></range-text>
+                    <range-text name="DEX" :max="1000" :min="100" :step="1" v-model="params.enemy.dex"></range-text>
+                    <range-text name="Target Spot Hit Multiplier" :max="5" :min="0" :step="0.1" v-model="params.enemy.partrate"></range-text>
+                    <range-text name="Elemental Weakness Multiplier" :max="3" :min="0" :step="0.1" v-model="params.enemy.elmrate"></range-text>
                 </template>
             </section>
             <section id="pa" class="form-horizontal">
-                <header-toggle name="PA & 任意倍率" :summary="summary_pa">
+                <header-toggle name="PA & Misc. Multipliers" :summary="summary_pa">
                     <i class="icon" v-bind:class="(toggle.paany ? 'icon-plus' : 'icon-minus')"></i>
                     <input type="checkbox" v-model.number="toggle.paany">
                 </header-toggle>
                 <template v-if="!toggle.paany">
                     <div class="form-group">
                         <div class="col-2 center">
-                            PA倍率
+                            PA Notation
                         </div>
                         <div class="col-2 center">
                             <input class="form-input input-lg right" type="text" v-model.lazy="params.others.pa">
                         </div>
                         <div class="col-2 center">
-                            PA技量補正
+                            PA Dex Modifier
                         </div>
                         <div class="col-2 center">
                             <input class="form-input input-lg right" type="text" v-model.lazy="params.others.padex">
                         </div>
                         <div class="col-2 center">
-                            任意倍率
+                            Misc. Multipliers
                         </div>
                         <div class="col-2 center">
                             <input class="form-input input-lg right" type="text" v-model.lazy="params.others.any_r">
                         </div>
                     </div>
-                    <range-text name="フレーム数" :max="300" :min="1" :step="1" v-model="params.graph.frames"></range-text>
-                    <range-text name="PP" :max="50" :min="1" :step="1" v-model="params.graph.usepp"></range-text>
+                    <range-text name="Frame Duration" :max="300" :min="1" :step="1" v-model="params.graph.frames"></range-text>
+                    <range-text name="PP Cost" :max="50" :min="1" :step="1" v-model="params.graph.usepp"></range-text>
                 </template>
             </section>
             <section id="buff" class="form-horizontal">
@@ -211,30 +211,30 @@
                 <template v-if="!toggle.buff">
                     <div class="form-group">
                         <h5 class="col-5">
-                            基礎値
+                            Standard Values
                         </h5>
                         <h6 class="col-7">
-                            プレイヤー{{ params.player.atk }}、武器OP{{ params.weapon.op }}、ユニットOP{{ params.equips.unitsop }}
+                            Player - {{ params.player.atk }} | Weapon Affixes - {{ params.weapon.op }} | Unit Affixes - {{ params.equips.unitsop }}
                         </h6>
                         <div class="col-2 center">
                             <label class="btn btn-lg wh100" style="padding-left:0;padding-right:0;" :class="[ params.others.baseselect.indexOf(1)>-1 ? 'btn-primary' : '' ]">
-                                <input type="checkbox" :value="1" v-model="params.others.baseselect" v-on:change="baseSelected">+ﾌﾟﾚｲﾔｰ
+                                <input type="checkbox" :value="1" v-model="params.others.baseselect" v-on:change="baseSelected">+Player
                             </label>
                             
                         </div>
                         <div class="col-2 center">
                             <label class="btn btn-lg wh100" style="padding-left:0;padding-right:0;" :class="[ params.others.baseselect.indexOf(2)>-1 ? 'btn-primary' : '' ]">
-                                <input type="checkbox" :value="2" v-model="params.others.baseselect" v-on:change="baseSelected">+武器OP
+                                <input type="checkbox" :value="2" v-model="params.others.baseselect" v-on:change="baseSelected">+WPN Affixes
                             </label>
                         </div>
                         <div class="col-2 center">
                             <label class="btn btn-lg wh100" style="padding-left:0;padding-right:0;" :class="[ params.others.baseselect.indexOf(3)>-1 ? 'btn-primary' : '' ]">
-                                <input type="checkbox" :value="3" v-model="params.others.baseselect" v-on:change="baseSelected">+ﾕﾆｯﾄOP
+                                <input type="checkbox" :value="3" v-model="params.others.baseselect" v-on:change="baseSelected">+Unit Affixes
                             </label>
                         </div>
                         <div class="col-2 center">
                             <label class="btn btn-lg wh100" style="padding-left:0;padding-right:0;" :class="[ params.others.baseselect.indexOf(4)>-1 ? 'btn-primary' : '' ]">
-                                <input type="checkbox" :value="4" v-model="params.others.baseselect" v-on:change="baseSelected">+バフ
+                                <input type="checkbox" :value="4" v-model="params.others.baseselect" v-on:change="baseSelected">+Buffs
                             </label>
                         </div>
                         <div class="col-2 center">
@@ -242,23 +242,23 @@
                         </div>
                         <div class="col-2 center">
                             <label class="btn btn-error btn-lg wh100" style="padding-left:0;padding-right:0;" v-on:click="baseReset">
-                                リセット
+                                Reset
                             </label>
                         </div>
                     </div>
                     <div class="form-group">
                         <h5 class="col-5">
-                            倍率系
+                            Multipliers
                         </h5>
                         <h6 class="col-7">
-                            シフドリ(小:1.05、中:1.1、大:1.2)、チームツリー(1.05~1.20)<br>
-                            シフタ(1.197)、シフタアドバンス(1.05~)、カタナギア(1.3)
+                            Shifta Drink(S:1.05, M:1.1, L:1.2), Team Tree(1.05~1.20)<br>
+                            Shifta(1.197), Shifta Advance(1.05~), Katana Gear(1.3)
                         </h6>
                     </div>
                     <range-text v-for="(val,index) in params.others.buffs" :key="index" 
                             @addarray="params.others.buffs.push({rate:1.0,base:params.others.buffbase})" 
                             @removearray="params.others.buffs.splice(index, 1)" :arrid="index" 
-                            :name="'バフ倍率 '+(index+1)" :max="1.3" :min="1.0" :step="0.001" @newbase="baseSelected" :rateswitch="true" v-model="params.others.buffs[index].rate">
+                            :name="'Buff Multi '+(index+1)" :max="1.3" :min="1.0" :step="0.001" @newbase="baseSelected" :rateswitch="true" v-model="params.others.buffs[index].rate">
                                 <div class="col-2">
                                     <input class="form-input input-lg right" type="text" v-model.lazy="params.others.buffs[index].base">
                                 </div>
@@ -283,17 +283,17 @@
                             <template v-if="cls=='Fo'">
                                 <div class="form-group">
                                     <div class="col-3 center onlymain">
-                                        ｴﾚﾒﾝﾀﾙｺﾝﾊﾞｰｼﾞｮﾝ
+                                        Elemental Conversion
                                     </div>
                                     <div class="col-9" style="display:flex;">
                                         <div class="skillnone">
                                             <label class="btn btn-lg wh100 center" v-bind:class="[ params.others.elconv==0 ? 'btn-primary' : '' ]">
-                                                <input type="radio" :value="0" v-model="params.others.elconv">なし
+                                                <input type="radio" :value="0" v-model="params.others.elconv">NA
                                             </label>
                                         </div>
                                         <div class="skill">
                                             <label class="btn btn-lg wh100 center" v-bind:class="[ params.others.elconv==1 ? 'btn-primary' : '' ]">
-                                                <input type="radio" :value="1" v-model="params.others.elconv">あり
+                                                <input type="radio" :value="1" v-model="params.others.elconv">Active
                                             </label>
                                         </div>
                                     </div>
@@ -302,22 +302,22 @@
                             <template v-if="cls=='Te'">
                                 <div class="form-group">
                                     <div class="col-3 center">
-                                        ウォンドリアクター
+                                        Wand Reactor
                                     </div>
                                     <div class="col-4" style="display:flex;">
                                         <div class="skillnone">
                                             <label class="btn btn-lg wh100 center" v-bind:class="[ params.others.wondreacter.skill==0 ? 'btn-primary' : '' ]">
-                                                <input type="radio" :value="0" v-model="params.others.wondreacter.skill">なし
+                                                <input type="radio" :value="0" v-model="params.others.wondreacter.skill">NA
                                             </label>
                                         </div>
                                         <div class="skill">
                                             <label class="btn btn-lg wh100 center" v-bind:class="[ params.others.wondreacter.skill==1 ? 'btn-primary' : '' ]">
-                                                <input type="radio" :value="1" v-model="params.others.wondreacter.skill">あり
+                                                <input type="radio" :value="1" v-model="params.others.wondreacter.skill">Active
                                             </label>
                                         </div>
                                     </div>
                                     <div class="col-3 center">
-                                        武器法撃力
+                                        Weapon TATK
                                     </div>
                                     <div class="col-2">
                                         <input class="form-input input-lg right" type="text" v-model.lazy="params.others.wondreacter.m_atk">
