@@ -12,7 +12,7 @@ var init_params = {
     settings:{
         atktype:0,
         group:"",
-        desc:"b(OxO)n",
+        desc:":wackothink:",
         dmgid:0
     },
     player:{
@@ -147,8 +147,8 @@ Vue.component('range-text', {
         <div class="form-group">\
             <h5 class="col-10">{{name}}</h5>\
             <div v-if="rateswitch" class="col-2">\
-                <button v-if="arrid==0" class="btn btn-success wh100" v-on:click="add">追加</button></h5>\
-                <button v-if="arrid>0" class="btn btn-error wh100" v-on:click="remove">削除</button></h5>\
+                <button v-if="arrid==0" class="btn btn-success wh100" v-on:click="add">Add</button></h5>\
+                <button v-if="arrid>0" class="btn btn-error wh100" v-on:click="remove">Remove</button></h5>\
             </div>\
             <div class="col-8">\
                 <input type="range" class="input-lg slider" ref="input" :max="max" :min="min" :step="step" :value="value" @input="updateValue">\
@@ -157,7 +157,7 @@ Vue.component('range-text', {
                 <input type="text" class="form-input input-lg" ref="input" :value="value" @input="updateValue">\
             </div>\
             <div v-if="statuslabel" class="col-2">\
-                <label class="label label-lg center wh100">ステ</label>\
+                <label class="label label-lg center wh100">Stat</label>\
             </div>\
             <slot></slot>\
         </div>',
@@ -267,13 +267,13 @@ var dmg_calc = new Vue({
         },
         // 表示用サマリー(プレイヤー)
         summary_p : function(){
-            return ['素手 '+this.params.player.atk,'技量 '+this.params.player.dex,'クリティカル率 '+this.params.player.critical+'%'].join(' ')
+            return ['Base ATK '+this.params.player.atk,'DEX '+this.params.player.dex,'Critical Rate '+this.params.player.critical+'%'].join(' ')
         },
         // 表示用サマリー(武器)
         summary_w : function(){
             var potentials = this.summary_w_potentials;
-            return ['攻撃力 '+this.params.weapon.atk,'属性 '+this.params.weapon.elm,'OP(固定値)＋'+this.params.weapon.op].join(' ') + '\r\n' +
-                   ['倍率×'+potentials.r.toFixed(2),' クリティカル倍率×'+potentials.cr.toFixed(2)].join(' ');
+            return ['Wpn ATK '+this.params.weapon.atk,'Element '+this.params.weapon.elm,'Affixes＋'+this.params.weapon.op].join(' ') + '\r\n' +
+                   ['Multi×'+potentials.r.toFixed(2),' Critical Multi×'+potentials.cr.toFixed(2)].join(' ');
         },
         // 武器潜在S級OP倍率
         summary_w_potentials : function(){
@@ -291,7 +291,7 @@ var dmg_calc = new Vue({
         // 表示用サマリー(ユニット)
         summary_q : function(){
             var rings = this.summary_q_rings;
-            return ['ユニOP&リングステ＋'+(this.params.equips.unitsop),'\r\n倍率×'+rings.r.toFixed(2),' クリティカル倍率×'+rings.cr.toFixed(2)].join(' ');
+            return ['Unit Affixes & Ring Stats＋'+(this.params.equips.unitsop),'\r\nMulti×'+rings.r.toFixed(2),' Critical Multi×'+rings.cr.toFixed(2)].join(' ');
         },
         // リング倍率
         summary_q_rings : function(){
@@ -308,17 +308,17 @@ var dmg_calc = new Vue({
         },
         // 表示用サマリー(エネミー)
         summary_e : function(){
-            return ['防御力 '+this.params.enemy.def,'技量 '+this.params.enemy.dex,'\r\n部位倍率× '+Number(this.params.enemy.partrate).toFixed(2),'属性倍率×'+Number(this.params.enemy.elmrate).toFixed(2)].join(' ')
+            return ['Defense '+this.params.enemy.def,'DEX '+this.params.enemy.dex,'\r\nHit Multi× '+Number(this.params.enemy.partrate).toFixed(2),'Ele. Weakness×'+Number(this.params.enemy.elmrate).toFixed(2)].join(' ')
         },
         // 表示用サマリー(PA任意倍率)
         summary_pa : function(){
-            return ['PA '+this.params.others.pa,'PA技量補正 '+this.params.others.padex,'\r\n任意倍率× '+((100+Number(this.params.others.any_r))/100).toFixed(2)].join(' ');
+            return ['PA Notation - '+this.params.others.pa,'PA Dex Mod. - '+this.params.others.padex,'\r\nMisc Multis× '+((100+Number(this.params.others.any_r))/100).toFixed(2)].join(' ');
         },
         
         // 表示用サマリー(スキル)
         summary_s : function(){
             var skillef=this.summary_s_skills;
-            return ["倍率×"+skillef.r.toFixed(2),"クリティカル倍率×"+skillef.cr.toFixed(2),"\r\nステ＋"+skillef.st].join(' ');
+            return ["Multi×"+skillef.r.toFixed(2),"Critical Multi×"+skillef.cr.toFixed(2),"\r\nStats＋"+skillef.st].join(' ');
         },
         // 表示用サマリー(バフ)
         summary_b : function(){
